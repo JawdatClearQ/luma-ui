@@ -1,0 +1,25 @@
+{
+  "name": "luma-ui",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A beautiful, accessible, cross-platform component library for React and React Native. Light up your UI.",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "clean": "turbo run clean",
+    "publish:packages": "turbo run build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.0",
+    "turbo": "^2.10.0",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "npm@9.8.1",
+  "engines": {
+    "node": ">=18"
+  }
+}

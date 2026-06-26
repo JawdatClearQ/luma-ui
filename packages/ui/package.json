@@ -1,0 +1,64 @@
+{
+  "name": "@luma/ui",
+  "version": "1.0.0",
+  "description": "A beautiful, accessible, cross-platform component library for React and React Native. Light up your UI.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./theme": {
+      "import": "./dist/theme.esm.js",
+      "require": "./dist/theme.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --external react,react-dom,react-native,tamagui,@tamagui/core",
+    "dev": "tsup src/index.ts --format esm,cjs --watch --external react,react-dom,react-native,tamagui,@tamagui/core",
+    "lint": "eslint src --ext .ts,.tsx",
+    "test": "vitest run",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "react",
+    "react-native",
+    "components",
+    "ui-library",
+    "design-system",
+    "tamagui",
+    "cross-platform",
+    "luma"
+  ],
+  "peerDependencies": {
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-native": "^0.86.0",
+    "tamagui": "^2.3.3"
+  },
+  "peerDependenciesMeta": {
+    "react-dom": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^1.3.0"
+  },
+  "dependencies": {
+    "@tamagui/core": "^2.3.3"
+  }
+}
