@@ -19,32 +19,31 @@ export interface ChipProps extends XStackProps {
 }
 
 const colorMap: Record<ChipColorScheme, { solid: string; subtle: string; outline: string; text: string }> = {
-  primary: { solid: '$primary500', subtle: '$primary100', outline: '$primary500', text: '$primary700' },
-  secondary: { solid: '$secondary500', subtle: '$secondary100', outline: '$secondary500', text: '$secondary700' },
-  success: { solid: '#22c55e', subtle: '#dcfce7', outline: '#22c55e', text: '#166534' },
-  warning: { solid: '#f59e0b', subtle: '#fef3c7', outline: '#f59e0b', text: '#92400e' },
-  error: { solid: '#ef4444', subtle: '#fee2e2', outline: '#ef4444', text: '#991b1b' },
-  info: { solid: '#3b82f6', subtle: '#dbeafe', outline: '#3b82f6', text: '#1e40af' },
+  primary: { solid: '$primary500', subtle: '$primary50', outline: '$primary400', text: '$primary700' },
+  secondary: { solid: '$secondary500', subtle: '$secondary50', outline: '$secondary400', text: '$secondary700' },
+  success: { solid: '$success500', subtle: '$success50', outline: '$success400', text: '$primary700' },
+  warning: { solid: '$warning500', subtle: '$warning50', outline: '$warning400', text: '$primary700' },
+  error: { solid: '$error500', subtle: '$error50', outline: '$error400', text: '$primary700' },
+  info: { solid: '$primary500', subtle: '$primary50', outline: '$primary300', text: '$primary700' },
 }
 
 const sizeMap: Record<ChipSize, { px: number; py: number; fontSize: number; iconSize: number }> = {
   sm: { px: 8, py: 2, fontSize: 11, iconSize: 12 },
-  md: { px: 10, py: 4, fontSize: 13, iconSize: 14 },
-  lg: { px: 12, py: 6, fontSize: 14, iconSize: 16 },
+  md: { px: 12, py: 4, fontSize: 13, iconSize: 14 },
+  lg: { px: 16, py: 6, fontSize: 14, iconSize: 16 },
 }
 
 const ChipFrame = styled(XStack, {
   name: 'Chip',
-  borderRadius: '$full',
+  borderRadius: 9999,
   alignItems: 'center',
   alignSelf: 'flex-start',
-  display: 'inline-flex',
   gap: 4,
 })
 
 const CloseButton = styled(YStack, {
   name: 'ChipCloseButton',
-  borderRadius: '$full',
+  borderRadius: 9999,
   alignItems: 'center',
   justifyContent: 'center',
   cursor: 'pointer',
@@ -69,15 +68,14 @@ export const Chip = forwardRef<any, ChipProps>(
     const colors = colorMap[colorScheme]
     const dims = sizeMap[sizeProp]
 
-    const bg =
-      variant === 'solid'
-        ? colors.solid
-        : variant === 'subtle'
-        ? colors.subtle
-        : 'transparent'
+    const bg = variant === 'solid'
+      ? colors.solid
+      : variant === 'subtle'
+      ? colors.subtle
+      : 'transparent'
 
     const border = variant === 'outline' ? { borderWidth: 1, borderColor: colors.outline } : {}
-    const textColor = variant === 'solid' ? 'white' : colors.text
+    const textColor = variant === 'solid' ? '$white' : colors.text
 
     return (
       <ChipFrame
@@ -86,7 +84,6 @@ export const Chip = forwardRef<any, ChipProps>(
         paddingVertical={dims.py}
         backgroundColor={bg}
         opacity={isDisabled ? 0.5 : 1}
-        cursor={isDisabled ? 'not-allowed' : 'default'}
         {...border}
         {...props}
       >
@@ -124,5 +121,3 @@ export const Chip = forwardRef<any, ChipProps>(
 )
 
 Chip.displayName = 'Chip'
-
-

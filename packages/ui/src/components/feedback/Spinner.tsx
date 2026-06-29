@@ -22,7 +22,7 @@ const sizeMap: Record<SpinnerSize, number> = {
 export const Spinner = forwardRef<any, SpinnerProps>(
   ({ size = 'md', color, speed = 0.8, ...props }, ref) => {
     const dim = sizeMap[size]
-    const spinnerColor = color ?? '$primary500'
+    const spinnerColor = color ?? '#8b7355'
 
     return (
       <Circle
@@ -30,7 +30,7 @@ export const Spinner = forwardRef<any, SpinnerProps>(
         width={dim}
         height={dim}
         borderWidth={Math.max(2, dim * 0.15)}
-        borderColor="$gray200"
+        borderColor="#ede5d8"
         borderTopColor={spinnerColor}
         role="status"
         aria-label="Loading"

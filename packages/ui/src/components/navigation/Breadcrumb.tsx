@@ -6,85 +6,43 @@ import { forwardRef, type ReactNode } from 'react'
 export interface BreadcrumbItem {
   label: string
   href?: string
-  icon?: ReactNode
+  onPress?: () => void
 }
 
 export interface BreadcrumbProps extends XStackProps {
   items: BreadcrumbItem[]
-  separator?: ReactNode
-  size?: 'sm' | 'md' | 'lg'
+  separator?: string
+  children?: ReactNode
 }
-
-const sizeMap = {
-  sm: { fontSize: 12, gap: 4 },
-  md: { fontSize: 14, gap: 8 },
-  lg: { fontSize: 16, gap: 12 },
-}
-
-const StyledBreadcrumb = styled(XStack, {
-  name: 'Breadcrumb',
-  alignItems: 'center',
-  flexWrap: 'wrap',
-})
 
 export const Breadcrumb = forwardRef<any, BreadcrumbProps>(
-  (props: BreadcrumbProps, ref) => {
-    const {
-      items,
-      separator = '/',
-      size = 'md',
-      ...rest
-    } = props
-
-    const s = size as keyof typeof sizeMap
-    const dims = sizeMap[s]
-
+  ({ items, separator = '/', ...props }, ref) => {
     return (
-      <StyledBreadcrumb
-        ref={ref}
-        gap={dims.gap}
-        aria-label="Breadcrumb"
-        role="navigation"
-        {...rest}
-      >
+      <XStack ref={ref} gap={8} alignItems="center" role="navigation" aria-label="Breadcrumb" {...props}>
         {items.map((item, index) => {
           const isLast = index === items.length - 1
-
           return (
-            <XStack key={item.label} gap={dims.gap} alignItems="center">
-              {item.icon}
-              {item.href && !isLast ? (
-                <Text
-                  // @ts-ignore
-                  href={item.href}
-                  fontSize={dims.fontSize}
-                  color="$primary500"
-                  textDecorationLine="none"
-                  // @ts-ignore
-                  hoverStyle={{ textDecorationLine: 'underline', color: '$primary600' }}
-                  aria-current={isLast ? 'page' : undefined}
-                >
-                  {item.label}
-                </Text>
-              ) : (
-                <Text
-                  fontSize={dims.fontSize}
-                  color={isLast ? '$textPrimary' : '$textSecondary'}
-                  fontWeight={isLast ? '600' : '400'}
-                  aria-current={isLast ? 'page' : undefined}
-                >
-                  {item.label}
-                </Text>
-              )}
+            <XStack key={index} gap={8} alignItems="center">
+              <Text
+                fontSize={13}
+                color={isLast ? '$neutral800' : '$neutral400'}
+                fontWeight={isLast ? '500' : '400'}
+                onPress={isLast ? undefined : item.onPress}
+                cursor={isLast ? 'default' : 'pointer'}
+                hoverStyle={isLast ? {} : { color: '$neutral600' }}
+                role={isLast ? undefined : 'link'}
+              >
+                {item.label}
+              </Text>
               {!isLast && (
-                <Text fontSize={dims.fontSize} color="$textTertiary" aria-hidden={true}>
+                <Text fontSize={12} color="$neutral300" userSelect="none">
                   {separator}
                 </Text>
               )}
             </XStack>
           )
         })}
-      </StyledBreadcrumb>
+      </XStack>
     )
   }
 )

@@ -1,7 +1,7 @@
 "use client";
 
 import { styled, XStack, Text, type XStackProps } from 'tamagui'
-import { forwardRef, useCallback, useState, useEffect } from 'react'
+import { forwardRef, useCallback } from 'react'
 
 export interface CheckboxProps extends Omit<XStackProps, 'onChange'> {
   isChecked?: boolean
@@ -16,9 +16,9 @@ export interface CheckboxProps extends Omit<XStackProps, 'onChange'> {
 const getBoxSize = (size: string = 'md') => {
   switch (size) {
     case 'sm':
-      return { width: 16, height: 16, borderRadius: 3, checkSize: 10 }
+      return { width: 16, height: 16, borderRadius: 4, checkSize: 10 }
     case 'lg':
-      return { width: 24, height: 24, borderRadius: 5, checkSize: 16 }
+      return { width: 24, height: 24, borderRadius: 6, checkSize: 16 }
     default:
       return { width: 20, height: 20, borderRadius: 4, checkSize: 13 }
   }
@@ -29,8 +29,8 @@ const CheckboxBox = styled(XStack, {
   alignItems: 'center',
   justifyContent: 'center',
   borderWidth: 2,
-  borderColor: '$border',
-  backgroundColor: '$background',
+  borderColor: '$neutral300',
+  backgroundColor: '$white',
   flexShrink: 0,
 
   variants: {
@@ -53,7 +53,7 @@ const CheckboxBox = styled(XStack, {
     },
     error: {
       true: {
-        borderColor: '$error',
+        borderColor: '$error400',
       },
     },
   } as const,
@@ -61,7 +61,7 @@ const CheckboxBox = styled(XStack, {
 
 const CheckMark = styled(Text, {
   name: 'CheckMark',
-  color: 'white',
+  color: '$white',
   fontWeight: 'bold',
   textAlign: 'center',
   userSelect: 'none',
@@ -93,7 +93,7 @@ export const Checkbox = forwardRef<any, CheckboxProps>(
       <XStack
         ref={ref}
         alignItems="center"
-        gap="$sm"
+        gap={8}
         role="checkbox"
         aria-checked={isIndeterminate ? 'mixed' : isChecked}
         aria-disabled={isDisabled}
@@ -114,7 +114,7 @@ export const Checkbox = forwardRef<any, CheckboxProps>(
             <XStack
               width={boxSize.width * 0.6}
               height={2}
-              backgroundColor="white"
+              backgroundColor="$white"
               borderRadius={1}
             />
           ) : (
@@ -128,9 +128,9 @@ export const Checkbox = forwardRef<any, CheckboxProps>(
         {label && (
           <Text
             userSelect="none"
-            color="$textPrimary"
+            color="$neutral800"
             opacity={isDisabled ? 0.5 : 1}
-            fontSize={size === 'sm' ? 14 : size === 'lg' ? 18 : 16}
+            fontSize={size === 'sm' ? 14 : size === 'lg' ? 17 : 15}
           >
             {label}
           </Text>

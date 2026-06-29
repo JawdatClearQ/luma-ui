@@ -10,23 +10,18 @@ export interface TabItem {
   isDisabled?: boolean
 }
 
-type TabVariant = 'line' | 'enclosed' | 'soft-rounded' | 'solid-rounded'
-type TabOrientation = 'horizontal' | 'vertical'
-type TabSize = 'sm' | 'md' | 'lg'
-
 export interface TabsProps extends Omit<XStackProps, 'onChange'> {
   tabs: TabItem[]
   activeTab: string
   onChange: (id: string) => void
-  variant?: TabVariant
-  orientation?: TabOrientation
-  size?: TabSize
+  variant?: 'line' | 'enclosed'
+  size?: 'sm' | 'md' | 'lg'
 }
 
-const sizeMap = {
-  sm: { fontSize: 12, px: 12, py: 6, gap: 4 },
-  md: { fontSize: 14, px: 16, py: 8, gap: 8 },
-  lg: { fontSize: 16, px: 20, py: 10, gap: 12 },
+const sizeMap: Record<string, { fontSize: number; px: number; py: number; gap: number }> = {
+  sm: { fontSize: 13, px: 16, py: 8, gap: 4 },
+  md: { fontSize: 14, px: 20, py: 10, gap: 8 },
+  lg: { fontSize: 15, px: 24, py: 12, gap: 12 },
 }
 
 const TabButton = styled(XStack, {
@@ -34,30 +29,25 @@ const TabButton = styled(XStack, {
   alignItems: 'center',
   justifyContent: 'center',
   cursor: 'pointer',
-  gap: '$sm',
-  borderRadius: '$md',
+  gap: 8,
+  borderRadius: 6,
+
   variants: {
     variant: {
       line: {
         borderBottomWidth: 2,
         borderBottomColor: 'transparent',
+        borderRadius: 0,
       },
       enclosed: {
         borderWidth: 1,
         borderColor: 'transparent',
-        borderBottomWidth: 0,
-        borderTopLeftRadius: '$md',
-        borderTopRightRadius: '$md',
-      },
-      'soft-rounded': {
-        borderRadius: '$lg',
-      },
-      'solid-rounded': {
-        borderRadius: '$full',
       },
     },
     active: {
-      true: {},
+      true: {
+        color: '$primary600',
+      },
     },
     disabled: {
       true: {
@@ -69,84 +59,47 @@ const TabButton = styled(XStack, {
 })
 
 export const Tabs = forwardRef<any, TabsProps>(
-  (props: TabsProps, ref) => {
-    const {
-      tabs,
-      activeTab,
-      onChange,
-      variant = 'line',
-      orientation = 'horizontal',
-      size = 'md',
-      ...rest
-    } = props
-
-    const v = variant as TabVariant
-    const s = size as TabSize
-    const dims = sizeMap[s]
-    const Container = orientation === 'vertical' ? YStack : XStack
+  ({ tabs, activeTab, onChange, variant = 'line', size = 'md', ...props }, ref) => {
+    const dims = sizeMap[size] || sizeMap.md
 
     return (
-      <Container
-        ref={ref}
-        role="tablist"
-        aria-orientation={orientation}
-        gap={dims.gap}
-        {...(orientation === 'horizontal' ? { flexDirection: 'row' as const } : { flexDirection: 'column' as const })}
-        {...rest}
-      >
+      <XStack ref={ref} gap={dims.gap} role="tablist" {...props}>
         {tabs.map((tab) => {
           const isActive = tab.id === activeTab
           return (
             <TabButton
               key={tab.id}
+              variant={variant}
+              active={isActive}
+              disabled={tab.isDisabled}
+              paddingHorizontal={dims.px}
+              paddingVertical={dims.py}
+              onPress={() => !tab.isDisabled && onChange(tab.id)}
               role="tab"
               aria-selected={isActive}
               aria-disabled={tab.isDisabled}
-              aria-controls={`tabpanel-${tab.id}`}
-              disabled={tab.isDisabled}
-              active={isActive}
-              variant={v}
-              paddingHorizontal={dims.px}
-              paddingVertical={dims.py}
-              onPress={() => {
-                if (!tab.isDisabled) onChange(tab.id)
-              }}
-              {...(isActive
-                ? {
-                    ...(v === 'line' && {
-                      borderBottomColor: '$primary500',
-                      color: '$primary500',
-                    }),
-                    ...(v === 'enclosed' && {
-                      backgroundColor: '$background',
-                      borderColor: '$border',
-                      borderBottomColor: '$background',
-                    }),
-                    ...(v === 'soft-rounded' && {
-                      backgroundColor: '$primary100',
-                      color: '$primary700',
-                    }),
-                    ...(v === 'solid-rounded' && {
-                      backgroundColor: '$primary500',
-                      color: 'white',
-                    }),
-                  }
-                : {
-                    color: '$textSecondary',
-                    hoverStyle: {
-                      ...(v === 'line' && { borderBottomColor: '$gray300', color: '$textPrimary' }),
-                      ...(v !== 'line' && { backgroundColor: '$gray100', color: '$textPrimary' }),
-                    },
-                  })}
+              borderBottomColor={isActive && variant === 'line' ? '$primary500' : 'transparent'}
+              backgroundColor={isActive && variant === 'enclosed' ? '$white' : 'transparent'}
+              borderColor={isActive && variant === 'enclosed' ? '$neutral200' : 'transparent'}
+              borderBottomWidth={isActive && variant === 'enclosed' ? 0 : variant === 'line' ? 2 : 0}
             >
-              {tab.icon}
-              <Text fontSize={dims.fontSize} fontWeight={isActive ? '600' : '400'} color="inherit" userSelect="none">
+              {tab.icon && (
+                <Text fontSize={dims.fontSize} color={isActive ? '$primary500' : '$neutral400'}>
+                  {tab.icon}
+                </Text>
+              )}
+              <Text
+                fontSize={dims.fontSize}
+                fontWeight={isActive ? '500' : '400'}
+                color={isActive ? '$primary600' : '$neutral500'}
+                userSelect="none"
+              >
                 {tab.label}
               </Text>
             </TabButton>
           )
         })}
-      </Container>
+      </XStack>
     )
   }
 )

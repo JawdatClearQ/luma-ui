@@ -16,28 +16,34 @@ export interface AlertProps extends YStackProps {
 }
 
 const variantMap: Record<AlertVariant, { bg: string; border: string; iconColor: string; textColor: string; titleColor: string }> = {
-  info: { bg: '$primary100', border: '$primary300', iconColor: '$primary500', textColor: '$primary700', titleColor: '$primary800' },
-  success: { bg: '#dcfce7', border: '#86efac', iconColor: '#22c55e', textColor: '#166534', titleColor: '#14532d' },
-  warning: { bg: '#fef3c7', border: '#fde68a', iconColor: '#f59e0b', textColor: '#92400e', titleColor: '#78350f' },
-  error: { bg: '#fee2e2', border: '#fecaca', iconColor: '#ef4444', textColor: '#991b1b', titleColor: '#7f1d1d' },
+  info: { bg: '#faf6f0', border: '#d4c5a9', iconColor: '#8b7355', textColor: '#5c4f3a', titleColor: '#3d3425' },
+  success: { bg: '#f4f6ed', border: '#b8c9a3', iconColor: '#6f8f4e', textColor: '#4a5e35', titleColor: '#2f3d21' },
+  warning: { bg: '#fdf6ea', border: '#e8d09e', iconColor: '#c49b3f', textColor: '#7a6530', titleColor: '#54461f' },
+  error: { bg: '#fbf0ed', border: '#e0bcb3', iconColor: '#b86a5a', textColor: '#7a463c', titleColor: '#552f27' },
 }
 
 const AlertRoot = styled(YStack, {
   name: 'Alert',
-  borderRadius: '$md',
+  borderRadius: 12,
   borderWidth: 1,
-  padding: '$md',
+  paddingVertical: 16,
+  paddingHorizontal: 20,
   gap: 4,
+  shadowColor: '#1a1410',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.04,
+  shadowRadius: 8,
 })
 
 const CloseButton = styled(YStack, {
-  width: 20,
-  height: 20,
-  borderRadius: '$full',
+  width: 22,
+  height: 22,
+  borderRadius: 9999,
   alignItems: 'center',
   justifyContent: 'center',
   cursor: 'pointer',
-  hoverStyle: { opacity: 0.7 },
+  opacity: 0.5,
+  hoverStyle: { opacity: 0.85 },
 })
 
 export const Alert = forwardRef<any, AlertProps>(
@@ -52,23 +58,25 @@ export const Alert = forwardRef<any, AlertProps>(
         ref={ref}
         backgroundColor={vars.bg}
         borderColor={vars.border}
+        borderLeftWidth={3}
+        borderLeftColor={vars.border}
         role="alert"
         {...props}
       >
-        <XStack gap={8} alignItems="flex-start">
+        <XStack gap={12} alignItems="flex-start">
           {(icon || true) && (
-            <Text fontSize={16} color={vars.iconColor} marginTop={1}>
+            <Text fontSize={16} color={vars.iconColor} marginTop={2} fontWeight="400">
               {icon || defaultIcon(variant)}
             </Text>
           )}
-          <YStack flex={1} gap={2}>
+          <YStack flex={1} gap={4}>
             {title && (
-              <Text fontWeight="600" fontSize={14} color={vars.titleColor}>
+              <Text fontWeight="600" fontSize={14} letterSpacing={0.2} color={vars.titleColor}>
                 {title}
               </Text>
             )}
             {children && (
-              <Text fontSize={13} color={vars.textColor} lineHeight={18}>
+              <Text fontSize={13} color={vars.textColor} lineHeight={20} fontWeight="400">
                 {children}
               </Text>
             )}
@@ -84,7 +92,7 @@ export const Alert = forwardRef<any, AlertProps>(
               role="button"
               tabIndex={0}
             >
-              <Text fontSize={12} fontWeight="700" color={vars.textColor}>
+              <Text fontSize={13} fontWeight="500" color={vars.bg} selectable={false}>
                 ×
               </Text>
             </CloseButton>
@@ -99,9 +107,9 @@ Alert.displayName = 'Alert'
 
 function defaultIcon(variant: AlertVariant): string {
   switch (variant) {
-    case 'info': return 'ℹ'
+    case 'info': return 'i'
     case 'success': return '✓'
-    case 'warning': return '⚠'
+    case 'warning': return '▲'
     case 'error': return '✕'
   }
 }

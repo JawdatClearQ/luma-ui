@@ -19,29 +19,29 @@ export interface ProgressProps extends Omit<YStackProps, 'size'> {
 }
 
 const sizeMap: Record<ProgressSize, { barHeight: number; circleSize: number; strokeWidth: number; fontSize: number }> = {
-  sm: { barHeight: 6, circleSize: 48, strokeWidth: 4, fontSize: 11 },
-  md: { barHeight: 10, circleSize: 64, strokeWidth: 6, fontSize: 13 },
-  lg: { barHeight: 14, circleSize: 80, strokeWidth: 8, fontSize: 15 },
+  sm: { barHeight: 4, circleSize: 48, strokeWidth: 4, fontSize: 11 },
+  md: { barHeight: 6, circleSize: 64, strokeWidth: 6, fontSize: 13 },
+  lg: { barHeight: 10, circleSize: 80, strokeWidth: 8, fontSize: 15 },
 }
 
 const colorMap: Record<ProgressColorScheme, string> = {
-  primary: '$primary500',
-  secondary: '$secondary500',
-  success: '#22c55e',
-  warning: '#f59e0b',
-  error: '#ef4444',
-  info: '#3b82f6',
+  primary: '#8b7355',
+  secondary: '#b8a58a',
+  success: '#6f8f4e',
+  warning: '#c49b3f',
+  error: '#b86a5a',
+  info: '#7a8fa0',
 }
 
 const BarTrack = styled(YStack, {
-  backgroundColor: '$gray200',
-  borderRadius: '$full',
+  backgroundColor: '#ede5d8',
+  borderRadius: 9999,
   overflow: 'hidden',
   flex: 1,
 })
 
 const BarFill = styled(YStack, {
-  borderRadius: '$full',
+  borderRadius: 9999,
   height: '100%',
 })
 
@@ -74,7 +74,7 @@ export const Progress = forwardRef<any, ProgressProps>(
             width={dims.circleSize}
             height={dims.circleSize}
             borderWidth={dims.strokeWidth}
-            borderColor="$gray200"
+            borderColor="#ede5d8"
             alignItems="center"
             justifyContent="center"
             position="relative"
@@ -94,32 +94,32 @@ export const Progress = forwardRef<any, ProgressProps>(
               }}
             />
             {showLabel && !isIndeterminate && (
-              <Text fontSize={dims.fontSize} fontWeight="700" color="$textPrimary">
+              <Text fontSize={dims.fontSize} fontWeight="600" color="#3d3425" letterSpacing={0.2}>
                 {Math.round(displayValue)}%
               </Text>
             )}
             {isIndeterminate && (
-              <Text fontSize={dims.fontSize} color="$textSecondary">
-                ...
+              <Text fontSize={dims.fontSize} color="#b8a58a" letterSpacing={1}>
+                ···
               </Text>
             )}
           </Circle>
           {label && (
-            <Text fontSize={12} color="$textSecondary">{label}</Text>
+            <Text fontSize={12} color="#8b7a64" letterSpacing={0.3} fontWeight="500">{label}</Text>
           )}
         </YStack>
       )
     }
 
     return (
-      <YStack ref={ref} gap={4} {...props}>
+      <YStack ref={ref} gap={6} {...props}>
         {(showLabel || label) && (
           <XStack justifyContent="space-between" alignItems="center">
             {label && (
-              <Text fontSize={12} color="$textSecondary">{label}</Text>
+              <Text fontSize={12} color="#8b7a64" letterSpacing={0.3} fontWeight="500">{label}</Text>
             )}
             {showLabel && !isIndeterminate && (
-              <Text fontSize={12} fontWeight="600" color="$textSecondary">
+              <Text fontSize={12} fontWeight="600" color="#5c4f3a" letterSpacing={0.15}>
                 {Math.round(displayValue)}%
               </Text>
             )}

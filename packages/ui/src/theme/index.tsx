@@ -9,13 +9,15 @@ const config = createTamagui({
   themes: {
     light: {
       background: tokens.color.white,
-      color: tokens.color.gray900,
+      color: tokens.color.neutral900,
       primary: tokens.color.primary500,
+      secondary: tokens.color.secondary500,
     },
     dark: {
-      background: tokens.color.gray900,
+      background: tokens.color.neutral900,
       color: tokens.color.white,
       primary: tokens.color.primary400,
+      secondary: tokens.color.secondary400,
     },
   },
 });

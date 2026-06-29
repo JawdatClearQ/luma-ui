@@ -1,6 +1,6 @@
 "use client";
 
-import { styled, YStack, XStack, Text, Button, type YStackProps, type XStackProps } from 'tamagui'
+import { styled, YStack, XStack, Text, type YStackProps } from 'tamagui'
 import { forwardRef, type ReactNode, useEffect, useCallback } from 'react'
 import { CloseButton } from '../button/CloseButton'
 
@@ -35,6 +35,8 @@ const Overlay = styled(YStack, {
   zIndex: '$modal',
   justifyContent: 'center',
   alignItems: 'center',
+  enterStyle: { opacity: 0 } as any,
+  exitStyle: { opacity: 0 } as any,
 })
 
 const Panel = styled(YStack, {
@@ -42,12 +44,14 @@ const Panel = styled(YStack, {
   backgroundColor: '$background',
   borderRadius: '$xl',
   shadowColor: '#000',
-  shadowOffset: { width: 0, height: 10 },
-  shadowOpacity: 0.15,
-  shadowRadius: 30,
-  elevation: 16,
+  shadowOffset: { width: 0, height: 12 },
+  shadowOpacity: 0.18,
+  shadowRadius: 40,
+  elevation: 24,
   maxHeight: '85vh',
   overflow: 'hidden',
+  enterStyle: { opacity: 0, scale: 0.94, y: 8 } as any,
+  exitStyle: { opacity: 0, scale: 0.94, y: 8 } as any,
 })
 
 export const Modal = forwardRef<any, ModalProps>(
@@ -109,7 +113,7 @@ export const Modal = forwardRef<any, ModalProps>(
               alignItems="center"
               justifyContent="space-between"
             >
-              <Text fontSize={18} fontWeight="600" color="$textPrimary">
+              <Text fontSize={18} fontWeight="600" fontFamily="$heading" color="$textPrimary">
                 {title}
               </Text>
               <CloseButton onPress={onClose} size="sm" />

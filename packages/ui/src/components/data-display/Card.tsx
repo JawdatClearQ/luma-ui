@@ -1,9 +1,9 @@
 "use client";
 
-import { styled, YStack, Text, type YStackProps } from 'tamagui'
+import { styled, YStack, type YStackProps } from 'tamagui'
 import { forwardRef, createContext, useContext } from 'react'
 
-type CardVariant = 'elevated' | 'outlined' | 'filled'
+type CardVariant = 'elevated' | 'outlined' | 'flat'
 type CardSize = 'sm' | 'md' | 'lg'
 
 export interface CardProps extends YStackProps {
@@ -16,27 +16,50 @@ export interface CardProps extends YStackProps {
 const CardContext = createContext<{ size: CardSize }>({ size: 'md' })
 
 const sizeMap: Record<CardSize, { p: number; borderRadius: number }> = {
-  sm: { p: 12, borderRadius: 8 },
-  md: { p: 16, borderRadius: 12 },
-  lg: { p: 24, borderRadius: 16 },
+  sm: { p: 20, borderRadius: 8 },
+  md: { p: 32, borderRadius: 12 },
+  lg: { p: 40, borderRadius: 16 },
 }
 
 const CardRoot = styled(YStack, {
   name: 'Card',
-  backgroundColor: '$surface',
-  borderWidth: 0,
+  backgroundColor: '$white',
+  borderWidth: 1,
+  borderColor: '$neutral200',
+  variants: {
+    variant: {
+      elevated: {
+        shadowColor: '$neutral900',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.04,
+        shadowRadius: 24,
+        borderWidth: 0,
+        hoverStyle: {
+          shadowOpacity: 0.08,
+          shadowRadius: 32,
+        },
+      },
+      outlined: {
+        shadowOpacity: 0,
+        borderWidth: 1.5,
+        borderColor: '$neutral200',
+        hoverStyle: {
+          borderColor: '$primary300',
+        },
+      },
+      flat: {
+        shadowOpacity: 0,
+        borderWidth: 0,
+        backgroundColor: '$neutral50',
+      },
+    },
+  } as const,
+  defaultVariants: { variant: 'elevated' },
 })
 
 export const Card = forwardRef<any, CardProps>(
   ({ variant = 'elevated', size = 'md', children, onPress, ...props }, ref) => {
     const dims = sizeMap[size]
-
-    const variantStyle =
-      variant === 'elevated'
-        ? { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 8, elevation: 3 }
-        : variant === 'outlined'
-        ? { borderWidth: 1, borderColor: '$border' }
-        : { backgroundColor: '$gray100' }
 
     return (
       <CardContext.Provider value={{ size }}>
@@ -44,8 +67,8 @@ export const Card = forwardRef<any, CardProps>(
           ref={ref}
           padding={dims.p}
           borderRadius={dims.borderRadius}
-          {...variantStyle}
-          {...(onPress ? { onPress, cursor: 'pointer', hoverStyle: { opacity: 0.95 } } : {})}
+          variant={variant}
+          {...(onPress ? { onPress, cursor: 'pointer' } : {})}
           {...props}
         >
           {children}
@@ -75,7 +98,7 @@ CardHeader.displayName = 'Card.Header'
 
 const CardBody = forwardRef<any, CardSubProps>(({ children, ...props }, ref) => {
   return (
-    <YStack ref={ref} flex={1} {...props}>
+    <YStack ref={ref} flex={1} gap={12} {...props}>
       {children}
     </YStack>
   )

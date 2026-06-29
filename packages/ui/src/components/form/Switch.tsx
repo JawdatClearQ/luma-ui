@@ -26,7 +26,7 @@ const getSwitchSize = (size: string = 'md') => {
 const Track = styled(XStack, {
   name: 'SwitchTrack',
   borderRadius: 9999,
-  backgroundColor: '$gray300',
+  backgroundColor: '$neutral300',
   alignItems: 'center',
   position: 'relative',
 
@@ -47,7 +47,7 @@ const Track = styled(XStack, {
 const Thumb = styled(XStack, {
   name: 'SwitchThumb',
   borderRadius: 9999,
-  backgroundColor: 'white',
+  backgroundColor: '$white',
   position: 'absolute',
   elevation: 2,
 })
@@ -80,7 +80,7 @@ export const Switch = forwardRef<any, SwitchProps>(
       <XStack
         ref={ref}
         alignItems="center"
-        gap="$sm"
+        gap={8}
         role="switch"
         aria-checked={isChecked}
         aria-disabled={isDisabled}
@@ -105,9 +105,9 @@ export const Switch = forwardRef<any, SwitchProps>(
         {label && (
           <Text
             userSelect="none"
-            color="$textPrimary"
+            color="$neutral800"
             opacity={isDisabled ? 0.5 : 1}
-            fontSize={size === 'sm' ? 14 : size === 'lg' ? 18 : 16}
+            fontSize={size === 'sm' ? 14 : size === 'lg' ? 17 : 15}
           >
             {label}
           </Text>

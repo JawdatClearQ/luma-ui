@@ -15,18 +15,18 @@ export interface TooltipProps extends YStackProps {
 
 const TooltipContent = styled(TTooltip.Content, {
   name: 'TooltipContent',
-  backgroundColor: '$gray900',
+  backgroundColor: '$neutral900',
   borderRadius: '$sm',
   paddingHorizontal: '$sm',
   paddingVertical: '$xs',
   zIndex: 800,
-  enterStyle: { opacity: 0, scale: 0.9 } as any,
-  exitStyle: { opacity: 0, scale: 0.9 } as any,
+  enterStyle: { opacity: 0, scale: 0.92, y: -3 } as any,
+  exitStyle: { opacity: 0, scale: 0.92, y: -3 } as any,
 })
 
 const TooltipArrow = styled(TTooltip.Arrow, {
   name: 'TooltipArrow',
-  backgroundColor: '$gray900',
+  backgroundColor: '$neutral900',
 })
 
 export const Tooltip = forwardRef<any, TooltipProps>(
@@ -56,7 +56,7 @@ export const Tooltip = forwardRef<any, TooltipProps>(
         {!isDisabled && (
           <TooltipContent>
             <TooltipArrow />
-            <Text fontSize={12} color="white">
+            <Text fontSize={12} fontWeight={500} color="$white" letterSpacing={0.2}>
               {label}
             </Text>
           </TooltipContent>

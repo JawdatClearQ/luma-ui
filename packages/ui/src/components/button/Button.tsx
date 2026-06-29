@@ -1,13 +1,12 @@
 "use client";
 
-import { styled, Button as TButton, type ButtonProps as TButtonProps, Spinner, Text, XStack } from 'tamagui'
+import { styled, Button as TButton, Spinner, Text, XStack } from 'tamagui'
 import { forwardRef, type ReactNode } from 'react'
 
-type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'link' | 'danger'
+type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'luxury'
 type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-type ColorScheme = 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info'
 
-export interface ButtonProps extends Omit<TButtonProps, 'variant' | 'size' | 'icon'> {
+export interface ButtonProps {
   variant?: Variant
   size?: Size
   isLoading?: boolean
@@ -16,86 +15,91 @@ export interface ButtonProps extends Omit<TButtonProps, 'variant' | 'size' | 'ic
   rightIcon?: ReactNode
   isDisabled?: boolean
   fullWidth?: boolean
-  colorScheme?: ColorScheme
+  children?: ReactNode
+  onPress?: () => void
+  [key: string]: any
 }
 
-const sizeMap: Record<Size, { height: number; px: number; fontSize: number }> = {
-  xs: { height: 24, px: 8, fontSize: 12 },
-  sm: { height: 32, px: 12, fontSize: 14 },
-  md: { height: 40, px: 16, fontSize: 14 },
-  lg: { height: 48, px: 24, fontSize: 16 },
-  xl: { height: 56, px: 32, fontSize: 18 },
-}
-
-const variantStyles: Record<Variant, Record<string, any>> = {
-  primary: {
-    backgroundColor: '$primary500',
-    color: 'white',
-    hoverStyle: { backgroundColor: '$primary600' },
-    pressStyle: { backgroundColor: '$primary700' },
-    focusStyle: { borderColor: '$primary300', borderWidth: 2 },
-    disabledStyle: { backgroundColor: '$gray300', color: '$gray500' },
-  },
-  secondary: {
-    backgroundColor: '$secondary500',
-    color: 'white',
-    hoverStyle: { backgroundColor: '$secondary600' },
-    pressStyle: { backgroundColor: '$secondary700' },
-    focusStyle: { borderColor: '$secondary300', borderWidth: 2 },
-    disabledStyle: { backgroundColor: '$gray300', color: '$gray500' },
-  },
-  outline: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '$border',
-    color: '$textPrimary',
-    hoverStyle: { backgroundColor: '$gray50' },
-    pressStyle: { backgroundColor: '$gray100' },
-    focusStyle: { borderColor: '$primary400', borderWidth: 2 },
-    disabledStyle: { opacity: 0.4, backgroundColor: 'transparent' },
-  },
-  ghost: {
-    backgroundColor: 'transparent',
-    color: '$textPrimary',
-    hoverStyle: { backgroundColor: '$gray100' },
-    pressStyle: { backgroundColor: '$gray200' },
-    focusStyle: { backgroundColor: '$gray100' },
-    disabledStyle: { opacity: 0.4, backgroundColor: 'transparent' },
-  },
-  link: {
-    backgroundColor: 'transparent',
-    color: '$primary500',
-    textDecorationLine: 'underline',
-    hoverStyle: { color: '$primary600' },
-    pressStyle: { color: '$primary700' },
-    focusStyle: { outlineColor: '$primary300' },
-    disabledStyle: { opacity: 0.4, backgroundColor: 'transparent' },
-  },
-  danger: {
-    backgroundColor: '$error',
-    color: 'white',
-    hoverStyle: { backgroundColor: '#dc2626' },
-    pressStyle: { backgroundColor: '#b91c1c' },
-    focusStyle: { borderColor: '#fca5a5', borderWidth: 2 },
-    disabledStyle: { backgroundColor: '$gray300', color: '$gray500' },
-  },
+const sizeMap: Record<string, { height: number; px: number; fontSize: number; borderRadius: number; letterSpacing?: number }> = {
+  xs: { height: 36, px: 20, fontSize: 13, borderRadius: 6 },
+  sm: { height: 36, px: 20, fontSize: 13, borderRadius: 6 },
+  md: { height: 44, px: 28, fontSize: 14, borderRadius: 8 },
+  lg: { height: 52, px: 36, fontSize: 15, borderRadius: 10 },
+  xl: { height: 60, px: 44, fontSize: 16, borderRadius: 12, letterSpacing: 1 },
 }
 
 const StyledButton = styled(TButton, {
   name: 'Button',
   fontFamily: '$body',
-  fontWeight: '600',
-  borderRadius: '$md',
-  cursor: 'pointer',
+  fontWeight: '500',
   justifyContent: 'center',
   alignItems: 'center',
-  gap: '$sm',
+  gap: 8,
+  cursor: 'pointer',
   variants: {
     fullWidth: {
       true: { width: '100%' },
     },
   } as const,
 })
+
+const variantStyles: Record<string, Record<string, any>> = {
+  primary: {
+    backgroundColor: '$primary500',
+    color: '$white',
+    borderWidth: 0,
+    hoverStyle: {
+      backgroundColor: '$primary600',
+    },
+    pressStyle: {
+      backgroundColor: '$primary700',
+    },
+  },
+  secondary: {
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: '$primary500',
+    color: '$primary700',
+    hoverStyle: {
+      backgroundColor: '$primary50',
+      borderColor: '$primary600',
+    },
+  },
+  outline: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '$neutral300',
+    color: '$neutral700',
+    hoverStyle: {
+      backgroundColor: '$neutral50',
+    },
+  },
+  ghost: {
+    backgroundColor: 'transparent',
+    color: '$neutral700',
+    hoverStyle: {
+      backgroundColor: '$neutral100',
+    },
+  },
+  danger: {
+    backgroundColor: '$error500',
+    color: '$white',
+    borderWidth: 0,
+    hoverStyle: {
+      backgroundColor: '$error600',
+    },
+  },
+  luxury: {
+    backgroundColor: '$black',
+    color: '$primary300',
+    borderWidth: 1,
+    borderColor: '$primary500',
+    hoverStyle: {
+      backgroundColor: '$neutral800',
+      borderColor: '$primary400',
+    },
+  },
+}
 
 export const Button = forwardRef<any, ButtonProps>(
   (props: ButtonProps, ref) => {
@@ -108,48 +112,53 @@ export const Button = forwardRef<any, ButtonProps>(
       rightIcon,
       isDisabled,
       fullWidth,
-      colorScheme,
       children,
       ...rest
     } = props
 
     const v = variant as Variant
     const s = size as Size
-    const dims = sizeMap[s]
-    const styles = variantStyles[v]
+    const dims = sizeMap[s] || sizeMap.md
+    const styles = variantStyles[v] || variantStyles.primary
     const disabled = isDisabled || isLoading
+
+    const isLuxury = v === 'luxury'
 
     return (
       <StyledButton
         ref={ref}
         disabled={disabled}
         fullWidth={fullWidth}
-        aria-disabled={disabled}
-        aria-busy={isLoading}
         height={dims.height}
         paddingHorizontal={dims.px}
         fontSize={dims.fontSize}
+        borderRadius={dims.borderRadius}
+        letterSpacing={isLuxury ? 1.5 : dims.letterSpacing}
         {...styles}
         {...rest}
-        role="button"
       >
         {isLoading ? (
           <XStack gap="$sm" alignItems="center" justifyContent="center">
             <Spinner size="small" color="inherit" />
-            {loadingText ? (
-              <Text fontSize={dims.fontSize} color="inherit" userSelect="none">
+            {loadingText && (
+              <Text fontSize={dims.fontSize} color="inherit">
                 {loadingText}
               </Text>
-            ) : null}
+            )}
           </XStack>
         ) : (
-          <XStack gap="$sm" alignItems="center" justifyContent="center">
+          <XStack gap={8} alignItems="center" justifyContent="center">
             {leftIcon}
-            {children && (
-              <Text fontSize={dims.fontSize} color="inherit" fontWeight="600" userSelect="none">
-                {children}
-              </Text>
-            )}
+            <Text
+              fontSize={dims.fontSize}
+              color="inherit"
+              fontWeight={isLuxury ? '500' : '600'}
+              letterSpacing={isLuxury ? 1.5 : 0}
+              textTransform={isLuxury ? 'uppercase' : 'none'}
+              userSelect="none"
+            >
+              {children}
+            </Text>
             {rightIcon}
           </XStack>
         )}

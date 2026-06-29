@@ -32,7 +32,7 @@ export const FormControl = forwardRef<any, FormControlProps>(
     return (
       <YStack
         ref={ref}
-        gap="$xs"
+        gap={4}
         role="group"
         aria-invalid={isInvalid}
         aria-required={isRequired}
@@ -41,11 +41,11 @@ export const FormControl = forwardRef<any, FormControlProps>(
       >
         {label && (
           <YStack flexDirection="row" alignItems="center" gap={4}>
-            <Text fontSize={14} fontWeight="500" color="$textPrimary">
+            <Text fontSize={14} fontWeight="500" color="$neutral800">
               {label}
             </Text>
             {isRequired && (
-              <Text fontSize={14} fontWeight="500" color="$error" marginLeft={2}>
+              <Text fontSize={14} fontWeight="500" color="$error500" marginLeft={2}>
                 *
               </Text>
             )}
@@ -53,12 +53,12 @@ export const FormControl = forwardRef<any, FormControlProps>(
         )}
         {children}
         {isInvalid && errorMessage && (
-          <Text fontSize={12} color="$error" marginTop={2}>
+          <Text fontSize={12} color="$error500" marginTop={2}>
             {errorMessage}
           </Text>
         )}
         {!isInvalid && helperText && (
-          <Text fontSize={12} color="$textSecondary" marginTop={2}>
+          <Text fontSize={12} color="$neutral500" marginTop={2}>
             {helperText}
           </Text>
         )}

@@ -4,7 +4,6 @@ import { styled, XStack, Text, Button, type XStackProps } from 'tamagui'
 import { forwardRef, useMemo } from 'react'
 
 type PageSize = 'sm' | 'md' | 'lg'
-type PageVariant = 'outline' | 'solid' | 'ghost'
 
 export interface PaginationProps extends Omit<XStackProps, 'onChange'> {
   totalPages: number
@@ -13,21 +12,15 @@ export interface PaginationProps extends Omit<XStackProps, 'onChange'> {
   siblingCount?: number
   boundaryCount?: number
   size?: PageSize
-  variant?: PageVariant
 }
 
 const sizeMap: Record<string, { size: number; fontSize: number; gap: number }> = {
-  sm: { size: 28, fontSize: 12, gap: 2 },
-  md: { size: 36, fontSize: 14, gap: 4 },
-  lg: { size: 44, fontSize: 16, gap: 6 },
+  sm: { size: 32, fontSize: 13, gap: 4 },
+  md: { size: 40, fontSize: 14, gap: 6 },
+  lg: { size: 48, fontSize: 15, gap: 8 },
 }
 
-function getPageNumbers(
-  total: number,
-  current: number,
-  siblings: number,
-  boundaries: number
-): (number | 'ellipsis')[] {
+function getPageNumbers(total: number, current: number, siblings: number, boundaries: number): (number | 'ellipsis')[] {
   const pages: (number | 'ellipsis')[] = []
   for (let i = 1; i <= boundaries && i <= total; i++) pages.push(i)
   const leftStart = Math.max(current - siblings, boundaries + 2)
@@ -41,40 +34,24 @@ function getPageNumbers(
 
 const PageButton = styled(Button, {
   name: 'PageButton',
-  borderRadius: '$md',
+  borderRadius: 6,
   justifyContent: 'center',
   alignItems: 'center',
   padding: 0,
+  backgroundColor: 'transparent',
+  color: '$neutral600',
+  hoverStyle: { backgroundColor: '$neutral100' },
   variants: {
-    variant: {
-      outline: {
-        backgroundColor: 'transparent',
-        borderWidth: 1,
-        borderColor: '$border',
-        color: '$textPrimary',
-        hoverStyle: { backgroundColor: '$gray50' },
-      },
-      solid: {
-        backgroundColor: 'transparent',
-        color: '$textPrimary',
-        hoverStyle: { backgroundColor: '$gray100' },
-      },
-      ghost: {
-        backgroundColor: 'transparent',
-        color: '$textPrimary',
-        hoverStyle: { backgroundColor: '$gray100' },
-      },
-    },
     active: {
       true: {
         backgroundColor: '$primary500',
-        color: 'white',
+        color: '$white',
         hoverStyle: { backgroundColor: '$primary600' },
       },
     },
     disabled: {
       true: {
-        opacity: 0.4,
+        opacity: 0.3,
       },
     },
   } as const,
@@ -82,46 +59,26 @@ const PageButton = styled(Button, {
 
 const NavButton = styled(Button, {
   name: 'NavButton',
-  borderRadius: '$md',
+  borderRadius: 6,
   justifyContent: 'center',
   alignItems: 'center',
   padding: 0,
   backgroundColor: 'transparent',
-  color: '$textPrimary',
-  hoverStyle: { backgroundColor: '$gray100' },
+  color: '$neutral500',
+  hoverStyle: { backgroundColor: '$neutral100' },
   disabledStyle: { opacity: 0.3 },
 })
 
 export const Pagination = forwardRef<any, PaginationProps>(
-  (props: PaginationProps, ref) => {
-    const {
-      totalPages,
-      currentPage,
-      onChange,
-      siblingCount = 1,
-      boundaryCount = 1,
-      size = 'md',
-      variant = 'outline',
-      ...rest
-    } = props
-
-    const s = size as PageSize
-    const v = variant as PageVariant
-    const dims = sizeMap[s]
+  ({ totalPages, currentPage, onChange, siblingCount = 1, boundaryCount = 1, size = 'md', ...rest }, ref) => {
+    const dims = sizeMap[size] || sizeMap.md
     const pages = useMemo(
       () => getPageNumbers(totalPages, currentPage, siblingCount, boundaryCount),
       [totalPages, currentPage, siblingCount, boundaryCount]
     )
 
     return (
-      <XStack
-        ref={ref}
-        gap={dims.gap}
-        alignItems="center"
-        role="navigation"
-        aria-label="Pagination"
-        {...rest}
-      >
+      <XStack ref={ref} gap={dims.gap} alignItems="center" role="navigation" aria-label="Pagination" {...rest}>
         <NavButton
           width={dims.size}
           height={dims.size}
@@ -140,7 +97,7 @@ export const Pagination = forwardRef<any, PaginationProps>(
                 width={dims.size}
                 textAlign="center"
                 fontSize={dims.fontSize}
-                color="$textTertiary"
+                color="$neutral300"
                 userSelect="none"
               >
                 …
@@ -151,7 +108,6 @@ export const Pagination = forwardRef<any, PaginationProps>(
           return (
             <PageButton
               key={page}
-              variant={v}
               active={isActive}
               width={dims.size}
               height={dims.size}
@@ -159,7 +115,7 @@ export const Pagination = forwardRef<any, PaginationProps>(
               aria-label={`Go to page ${page}`}
               aria-current={isActive ? 'page' : undefined}
             >
-              <Text fontSize={dims.fontSize} fontWeight={isActive ? '700' : '400'} color="inherit">
+              <Text fontSize={dims.fontSize} fontWeight={isActive ? '600' : '400'} color="inherit">
                 {page}
               </Text>
             </PageButton>

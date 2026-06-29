@@ -21,11 +21,13 @@ const Content = styled(YStack, {
   borderColor: '$border',
   padding: '$md',
   shadowColor: '#000',
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.1,
-  shadowRadius: 8,
-  elevation: 8,
+  shadowOffset: { width: 0, height: 6 },
+  shadowOpacity: 0.12,
+  shadowRadius: 20,
+  elevation: 12,
   minWidth: 160,
+  enterStyle: { opacity: 0, scale: 0.95, y: -4 } as any,
+  exitStyle: { opacity: 0, scale: 0.95, y: -4 } as any,
 })
 
 export const Popover = forwardRef<any, PopoverProps>(

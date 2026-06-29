@@ -15,8 +15,8 @@ export interface SkeletonProps extends YStackProps {
 
 const SkeletonBox = styled(YStack, {
   name: 'Skeleton',
-  backgroundColor: '$gray200',
-  opacity: 0.7,
+  backgroundColor: '#ede5d8',
+  opacity: 0.5,
 })
 
 export const Skeleton = forwardRef<any, SkeletonProps>(
@@ -33,7 +33,7 @@ export const Skeleton = forwardRef<any, SkeletonProps>(
           ref={ref}
           width={boxWidth as any}
           height={boxHeight as any}
-          borderRadius="$full"
+          borderRadius={9999}
           {...props}
         />
       )
@@ -41,13 +41,13 @@ export const Skeleton = forwardRef<any, SkeletonProps>(
 
     if (isText && count > 1) {
       return (
-        <YStack ref={ref} gap={8} {...props}>
+        <YStack ref={ref} gap={10} {...props}>
           {Array.from({ length: count }).map((_, i) => (
             <SkeletonBox
               key={i}
               height={boxHeight}
               width={i === count - 1 ? '60%' : '100%'}
-              borderRadius="$sm"
+              borderRadius={4}
             />
           ))}
         </YStack>
@@ -59,7 +59,7 @@ export const Skeleton = forwardRef<any, SkeletonProps>(
         ref={ref}
         width={boxWidth as any}
         height={boxHeight as any}
-        borderRadius={isText ? '$sm' : '$md'}
+        borderRadius={isText ? 4 : 10}
         {...props}
       />
     )

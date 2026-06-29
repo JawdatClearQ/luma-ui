@@ -1,48 +1,80 @@
 "use client";
 
-import React, { forwardRef } from 'react';
-import { Input as TamaguiInput, styled, InputProps as TamaguiInputProps } from 'tamagui';
+import { forwardRef } from 'react'
+import { Input as TamaguiInput, styled, type InputProps as TamaguiInputProps } from 'tamagui'
 
 export interface InputProps extends TamaguiInputProps {
-  placeholder?: string;
-  isInvalid?: boolean;
-  isDisabled?: boolean;
-  size?: 'sm' | 'md' | 'lg';
-  variant?: 'outline' | 'filled' | 'unstyled';
+  placeholder?: string
+  isInvalid?: boolean
+  isDisabled?: boolean
+  size?: 'sm' | 'md' | 'lg'
+  variant?: 'outline' | 'filled' | 'unstyled' | 'underlined'
 }
 
 const StyledInput = styled(TamaguiInput, {
   name: 'LumaInput',
+  height: 48,
+  borderRadius: 8,
+  borderWidth: 1.5,
+  borderColor: '$neutral300',
+  backgroundColor: '$white',
+  color: '$neutral900',
+  fontSize: 15,
+  paddingHorizontal: 16,
+  placeholderTextColor: '$neutral400',
+
+  focusStyle: {
+    borderColor: '$primary400',
+    borderWidth: 2,
+  },
+
   variants: {
     size: {
-      sm: { height: 32, fontSize: '$sm', px: '$2' },
-      md: { height: 40, fontSize: '$md', px: '$3' },
-      lg: { height: 48, fontSize: '$lg', px: '$4' },
+      sm: { height: 36, fontSize: 13, paddingHorizontal: 12 },
+      md: { height: 48, fontSize: 15, paddingHorizontal: 16 },
+      lg: { height: 56, fontSize: 17, paddingHorizontal: 20 },
     },
     variant: {
       outline: {
-        borderWidth: 1,
-        borderColor: '$gray8',
         backgroundColor: 'transparent',
-        focusStyle: { borderColor: '$blue10', borderWidth: 2 },
+        borderColor: '$neutral300',
+        focusStyle: {
+          borderColor: '$primary400',
+          borderWidth: 2,
+        },
       },
       filled: {
-        borderWidth: 0,
-        backgroundColor: '$gray5',
-        focusStyle: { backgroundColor: '$gray6' },
+        backgroundColor: '$neutral50',
+        borderColor: 'transparent',
+        focusStyle: {
+          backgroundColor: '$white',
+          borderColor: '$primary400',
+        },
       },
       unstyled: {
         borderWidth: 0,
         backgroundColor: 'transparent',
+        paddingHorizontal: 0,
+      },
+      underlined: {
+        borderRadius: 0,
+        borderWidth: 0,
+        borderBottomWidth: 1.5,
+        borderColor: '$neutral300',
+        paddingHorizontal: 4,
+        focusStyle: {
+          borderBottomColor: '$primary400',
+          borderBottomWidth: 2,
+        },
       },
     },
   } as const,
   defaultVariants: { size: 'md', variant: 'outline' },
-});
+})
 
 export const Input = forwardRef<any, InputProps>(
   ({ placeholder, isInvalid, isDisabled, size = 'md', variant = 'outline', ...rest }, ref) => {
-    const { dangerouslySetInnerHTML, ...safeProps } = rest as any;
+    const { dangerouslySetInnerHTML, ...safeProps } = rest as any
     return (
       <StyledInput
         ref={ref}
@@ -50,11 +82,11 @@ export const Input = forwardRef<any, InputProps>(
         size={size}
         variant={variant}
         disabled={isDisabled}
-        borderColor={isInvalid ? '$red10' : undefined}
+        borderColor={isInvalid ? '$error400' : undefined}
         opacity={isDisabled ? 0.5 : 1}
         {...safeProps}
       />
-    );
+    )
   }
-);
-Input.displayName = 'LumaInput';
+)
+Input.displayName = 'LumaInput'

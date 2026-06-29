@@ -1,6 +1,6 @@
 "use client";
 
-import { styled, YStack, XStack, Text, Image as TamaguiImage, Circle, type XStackProps } from 'tamagui'
+import { styled, YStack, Text, Image as TamaguiImage, Circle, type XStackProps } from 'tamagui'
 import { forwardRef, useState, useMemo } from 'react'
 
 type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
@@ -16,10 +16,10 @@ const sizeMap: Record<AvatarSize, number> = {
 }
 
 const statusColorMap: Record<StatusType, string> = {
-  online: '#22c55e',
-  offline: '#9ca3af',
-  away: '#f59e0b',
-  busy: '#ef4444',
+  online: '#5C8A42',
+  offline: '#B8B2A4',
+  away: '#A8822E',
+  busy: '#8B3A4B',
 }
 
 export interface AvatarProps extends XStackProps {
@@ -38,7 +38,7 @@ const AvatarFrame = styled(YStack, {
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: '$full',
-  backgroundColor: '$gray200',
+  backgroundColor: '$neutral200',
   overflow: 'hidden',
   flexShrink: 0,
 })
@@ -49,7 +49,7 @@ const StatusDot = styled(Circle, {
   bottom: 0,
   right: 0,
   borderWidth: 2,
-  borderColor: '$background',
+  borderColor: '$white',
   zIndex: 1,
 })
 
@@ -70,7 +70,7 @@ export const Avatar = forwardRef<any, AvatarProps>(
     const initials = useMemo(() => (name ? getInitials(name) : ''), [name])
 
     const borderStyle = showBorder
-      ? { borderWidth: 2, borderColor: '$border' }
+      ? { borderWidth: 2, borderColor: '$primary300' }
       : {}
 
     const statusSize = Math.max(dimension * 0.3, 8)
@@ -100,7 +100,7 @@ export const Avatar = forwardRef<any, AvatarProps>(
         ) : (
           <Text
             fontWeight="600"
-            color="$gray700"
+            color="$neutral700"
             fontSize={dimension * 0.4}
           >
             {initials || '?'}

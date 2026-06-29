@@ -19,48 +19,72 @@ export interface SelectProps extends Omit<YStackProps, 'onChange'> {
   value?: string | string[]
   size?: 'sm' | 'md' | 'lg'
   error?: boolean
+  variant?: 'outline' | 'underlined'
 }
 
 const getSizeStyles = (size: string = 'md') => {
   switch (size) {
     case 'sm':
-      return { height: 32, fontSize: 14, paddingHorizontal: 8 }
+      return { height: 36, fontSize: 14, paddingHorizontal: 12 }
     case 'lg':
-      return { height: 48, fontSize: 18, paddingHorizontal: 16 }
+      return { height: 56, fontSize: 17, paddingHorizontal: 20 }
     default:
-      return { height: 40, fontSize: 16, paddingHorizontal: 12 }
+      return { height: 48, fontSize: 15, paddingHorizontal: 16 }
   }
 }
 
 const SelectTrigger = styled(XStack, {
   name: 'SelectTrigger',
-  borderWidth: 1,
-  borderColor: '$border',
-  borderRadius: '$md',
-  backgroundColor: '$background',
+  borderWidth: 1.5,
+  borderColor: '$neutral300',
+  borderRadius: 8,
+  backgroundColor: '$white',
   alignItems: 'center',
   justifyContent: 'space-between',
   width: '100%',
 
   hoverStyle: {
-    borderColor: '$primary500',
+    borderColor: '$primary400',
+  },
+
+  focusStyle: {
+    borderColor: '$primary400',
+    borderWidth: 2,
   },
 
   variants: {
     disabled: {
       true: {
-        opacity: 0.6,
-        backgroundColor: '$gray100',
+        opacity: 0.5,
+        backgroundColor: '$neutral50',
       },
     },
     error: {
       true: {
-        borderColor: '$error',
+        borderColor: '$error400',
       },
     },
     open: {
       true: {
-        borderColor: '$primary500',
+        borderColor: '$primary400',
+        borderWidth: 2,
+      },
+    },
+    variant: {
+      outline: {},
+      underlined: {
+        borderRadius: 0,
+        borderWidth: 0,
+        borderBottomWidth: 1.5,
+        borderColor: '$neutral300',
+        paddingHorizontal: 4,
+        focusStyle: {
+          borderBottomColor: '$primary400',
+          borderBottomWidth: 2,
+        },
+        hoverStyle: {
+          borderBottomColor: '$primary400',
+        },
       },
     },
   } as const,
@@ -73,20 +97,24 @@ const Dropdown = styled(YStack, {
   left: 0,
   right: 0,
   zIndex: 50,
-  backgroundColor: '$background',
+  backgroundColor: '$white',
   borderWidth: 1,
-  borderColor: '$border',
-  borderRadius: '$md',
+  borderColor: '$neutral200',
+  borderRadius: 8,
   marginTop: 4,
   maxHeight: 250,
   overflow: 'hidden',
-  elevation: 4,
+  elevation: 8,
+  shadowColor: '$black',
+  shadowOpacity: 0.08,
+  shadowRadius: 12,
+  shadowOffset: { width: 0, height: 4 },
 })
 
 const OptionItem = styled(XStack, {
   name: 'SelectOption',
-  paddingHorizontal: '$sm',
-  paddingVertical: '$sm',
+  paddingHorizontal: 12,
+  paddingVertical: 10,
   alignItems: 'center',
   justifyContent: 'space-between',
 
@@ -121,6 +149,7 @@ export const Select = forwardRef<any, SelectProps>(
       value,
       size = 'md',
       error = false,
+      variant = 'outline',
       ...rest
     },
     ref
@@ -210,31 +239,32 @@ export const Select = forwardRef<any, SelectProps>(
           disabled={isDisabled}
           error={error}
           open={isOpen}
+          variant={variant}
           onPress={handleToggle}
           height={sizeStyles.height}
           paddingHorizontal={sizeStyles.paddingHorizontal}
         >
           <Text
-            color={selectedLabels ? '$textPrimary' : '$textTertiary'}
+            color={selectedLabels ? '$neutral900' : '$neutral400'}
             fontSize={sizeStyles.fontSize}
             flex={1}
             numberOfLines={1}
           >
             {selectedLabels || placeholder}
           </Text>
-          <XStack gap="$xs" alignItems="center">
+          <XStack gap={4} alignItems="center">
             {isClearable && value && (Array.isArray(value) ? value.length > 0 : value !== '') && (
               <Text
                 role="button"
                 aria-label="Clear selection"
-                color="$textSecondary"
+                color="$neutral500"
                 fontSize={14}
                 onPress={handleClear}
               >
                 ×
               </Text>
             )}
-            <Text color="$textSecondary" fontSize={12}>
+            <Text color="$neutral500" fontSize={10}>
               {isOpen ? '▲' : '▼'}
             </Text>
           </XStack>
@@ -243,15 +273,15 @@ export const Select = forwardRef<any, SelectProps>(
         {isOpen && (
           <Dropdown ref={listRef} role={'listbox' as any} aria-multiselectable={isMulti}>
             {isSearchable && (
-              <XStack borderBottomWidth={1} borderBottomColor="$border" padding="$xs">
+              <XStack borderBottomWidth={1} borderBottomColor="$neutral200" padding={4}>
                 <XStack
                   flex={1}
-                  padding="$sm"
+                  padding={8}
                   backgroundColor="transparent"
                 >
                   <Text
                     fontSize={14}
-                    color="$textSecondary"
+                    color="$neutral500"
                     onPress={() => {}}
                   >
                     Search...
@@ -261,7 +291,7 @@ export const Select = forwardRef<any, SelectProps>(
             )}
             {filteredOptions.length === 0 ? (
               <OptionItem>
-                <Text color="$textTertiary">No options found</Text>
+                <Text color="$neutral400">No options found</Text>
               </OptionItem>
             ) : (
               filteredOptions.map((option, index) => {
@@ -277,7 +307,9 @@ export const Select = forwardRef<any, SelectProps>(
                     active={focusedIndex === index}
                     onPress={() => handleSelect(option.value)}
                   >
-                    <Text fontSize={sizeStyles.fontSize}>{option.label}</Text>
+                    <Text fontSize={sizeStyles.fontSize} color="$neutral800">
+                      {option.label}
+                    </Text>
                     {isSelected && <Text color="$primary500">✓</Text>}
                   </OptionItem>
                 )

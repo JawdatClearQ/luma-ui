@@ -7,16 +7,26 @@ export interface DividerProps extends XStackProps {
   orientation?: 'horizontal' | 'vertical'
   label?: string
   labelPosition?: 'left' | 'center' | 'right'
+  variant?: 'default' | 'subtle' | 'luxury'
 }
 
 const StyledDividerLine = styled(XStack, {
   name: 'DividerLine',
-  backgroundColor: '$border',
+  backgroundColor: '$neutral200',
 })
 
 export const Divider = forwardRef<any, DividerProps>(
-  ({ orientation = 'horizontal', label, labelPosition = 'center', ...props }, ref) => {
+  ({ orientation = 'horizontal', label, labelPosition = 'center', variant = 'default', ...props }, ref) => {
     const isHorizontal = orientation === 'horizontal'
+
+    const lineBg =
+      variant === 'subtle'
+        ? '$neutral100'
+        : variant === 'luxury'
+        ? '$primary300'
+        : '$neutral200'
+
+    const lineHeight = variant === 'subtle' ? 0.5 : 1
 
     if (label) {
       return (
@@ -30,32 +40,27 @@ export const Divider = forwardRef<any, DividerProps>(
           aria-orientation={orientation}
           {...props}
         >
-          {labelPosition !== 'center' && labelPosition === 'left' && (
-            <Text color="$textSecondary" fontSize="$3" paddingHorizontal="$2" whiteSpace="nowrap">
+          {labelPosition === 'left' && (
+            <Text color="$neutral500" fontSize="$3" paddingHorizontal="$2">
               {label}
             </Text>
           )}
-          <StyledDividerLine
-            flex={1}
-            height={isHorizontal ? 1 : undefined}
-            width={isHorizontal ? undefined : 1}
-          />
+          <StyledDividerLine flex={1} backgroundColor={lineBg} height={lineHeight} />
           {labelPosition === 'center' && (
-            <Text color="$textSecondary" fontSize="$3" paddingHorizontal="$2" whiteSpace="nowrap">
+            <Text color="$neutral500" fontSize="$3" paddingHorizontal="$2">
               {label}
             </Text>
           )}
           {labelPosition === 'left' && (
-            <StyledDividerLine
-              flex={1}
-              height={isHorizontal ? 1 : undefined}
-              width={isHorizontal ? undefined : 1}
-            />
+            <StyledDividerLine flex={1} backgroundColor={lineBg} height={lineHeight} />
           )}
           {labelPosition === 'right' && (
-            <Text color="$textSecondary" fontSize="$3" paddingHorizontal="$2" whiteSpace="nowrap">
-              {label}
-            </Text>
+            <>
+              <StyledDividerLine flex={1} backgroundColor={lineBg} height={lineHeight} />
+              <Text color="$neutral500" fontSize="$3" paddingHorizontal="$2">
+                {label}
+              </Text>
+            </>
           )}
         </XStack>
       )
@@ -64,12 +69,13 @@ export const Divider = forwardRef<any, DividerProps>(
     return (
       <StyledDividerLine
         ref={ref}
-        height={isHorizontal ? 1 : '100%'}
+        height={isHorizontal ? lineHeight : '100%'}
         width={isHorizontal ? '100%' : 1}
         minHeight={isHorizontal ? 1 : undefined}
         minWidth={isHorizontal ? undefined : 1}
         role="separator"
         aria-orientation={orientation}
+        backgroundColor={lineBg}
         {...props}
       />
     )

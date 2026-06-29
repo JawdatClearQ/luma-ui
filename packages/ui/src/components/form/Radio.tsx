@@ -23,9 +23,9 @@ const getRadioSize = (size: string = 'md') => {
     case 'sm':
       return { outer: 16, inner: 8, fontSize: 14 }
     case 'lg':
-      return { outer: 24, inner: 12, fontSize: 18 }
+      return { outer: 24, inner: 12, fontSize: 17 }
     default:
-      return { outer: 20, inner: 10, fontSize: 16 }
+      return { outer: 20, inner: 10, fontSize: 15 }
   }
 }
 
@@ -34,9 +34,9 @@ const RadioOuter = styled(XStack, {
   alignItems: 'center',
   justifyContent: 'center',
   borderWidth: 2,
-  borderColor: '$border',
+  borderColor: '$neutral300',
   borderRadius: 9999,
-  backgroundColor: '$background',
+  backgroundColor: '$white',
   flexShrink: 0,
 
   variants: {
@@ -52,7 +52,7 @@ const RadioOuter = styled(XStack, {
     },
     error: {
       true: {
-        borderColor: '$error',
+        borderColor: '$error400',
       },
     },
   } as const,
@@ -66,7 +66,7 @@ const RadioInner = styled(XStack, {
   variants: {
     disabled: {
       true: {
-        backgroundColor: '$gray400',
+        backgroundColor: '$neutral300',
       },
     },
   } as const,
@@ -104,7 +104,7 @@ export const Radio = forwardRef<any, RadioProps>(
         ref={ref}
         role="radiogroup"
         aria-label={name}
-        gap="$md"
+        gap={12}
         {...rest}
       >
         {options.map((option) => {
@@ -113,7 +113,7 @@ export const Radio = forwardRef<any, RadioProps>(
             <XStack
               key={option.value}
               alignItems="center"
-              gap="$sm"
+              gap={8}
               role="radio"
               aria-checked={isSelected}
               aria-disabled={isDisabled}
@@ -138,7 +138,7 @@ export const Radio = forwardRef<any, RadioProps>(
               </RadioOuter>
               <Text
                 userSelect="none"
-                color="$textPrimary"
+                color="$neutral800"
                 fontSize={radioSize.fontSize}
               >
                 {option.label}
