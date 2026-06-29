@@ -1,3 +1,5 @@
+"use client";
+
 import { styled, XStack, YStack, Text, type XStackProps } from 'tamagui'
 import { forwardRef, type ReactNode } from 'react'
 
@@ -34,7 +36,6 @@ const TabButton = styled(XStack, {
   cursor: 'pointer',
   gap: '$sm',
   borderRadius: '$md',
-  transition: 'all 0.2s ease',
   variants: {
     variant: {
       line: {

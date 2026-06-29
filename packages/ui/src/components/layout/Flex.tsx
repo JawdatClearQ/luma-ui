@@ -1,3 +1,5 @@
+"use client";
+
 import { XStack, YStack } from 'tamagui'
 import { forwardRef, type ReactNode } from 'react'
 
@@ -8,9 +10,6 @@ export interface FlexProps {
   wrap?: 'nowrap' | 'wrap' | 'wrap-reverse'
   gap?: number
   children?: ReactNode
-  style?: React.CSSProperties
-  className?: string
-  ref?: any
   [key: string]: any
 }
 

@@ -1,3 +1,5 @@
+"use client";
+
 import { styled, Text as TamaguiText, type TextProps } from 'tamagui'
 import { forwardRef, type ReactNode } from 'react'
 
@@ -8,7 +10,7 @@ export interface ParagraphProps extends TextProps {
   children?: ReactNode
 }
 
-const sizeConfig = {
+const sizeConfig: Record<string, { fontSize: number; lineHeight: number }> = {
   sm: { fontSize: 14, lineHeight: 20 },
   md: { fontSize: 16, lineHeight: 24 },
   lg: { fontSize: 18, lineHeight: 28 },
@@ -20,7 +22,7 @@ const StyledParagraph = styled(TamaguiText, {
 })
 
 export const Paragraph = forwardRef<any, ParagraphProps>(
-  ({ size = 'md', indent, lead, children, style, ...props }, ref) => {
+  ({ size = 'md', indent, lead, children, ...props }, ref) => {
     const config = sizeConfig[size]
 
     return (
@@ -28,10 +30,7 @@ export const Paragraph = forwardRef<any, ParagraphProps>(
         ref={ref}
         fontSize={config.fontSize}
         lineHeight={lead ? config.lineHeight * 1.5 : config.lineHeight}
-        style={{
-          paddingLeft: indent ? 24 : undefined,
-          ...(style as object),
-        }}
+        paddingLeft={indent ? 24 : undefined}
         {...props}
       >
         {children}

@@ -1,32 +1,23 @@
-import { styled, YStack, XStack, Text, type StackProps } from 'tamagui'
+"use client";
+
+import { styled, YStack, XStack, Text, type YStackProps } from 'tamagui'
 import { forwardRef, useState, useCallback, useRef, useEffect, useMemo } from 'react'
-import { Platform } from 'react-native'
 
 export interface SelectOption {
   label: string
   value: string
 }
 
-export interface SelectProps extends StackProps {
-  /** Array of options to display */
+export interface SelectProps extends Omit<YStackProps, 'onChange'> {
   options: SelectOption[]
-  /** Placeholder text */
   placeholder?: string
-  /** Whether the select is searchable */
   isSearchable?: boolean
-  /** Whether multiple options can be selected */
   isMulti?: boolean
-  /** Whether the select is disabled */
   isDisabled?: boolean
-  /** Whether the select can be cleared */
   isClearable?: boolean
-  /** Change handler */
   onChange?: (value: string | string[]) => void
-  /** Current value(s) */
   value?: string | string[]
-  /** Select size */
   size?: 'sm' | 'md' | 'lg'
-  /** Whether the select is in an error state */
   error?: boolean
 }
 
@@ -49,7 +40,6 @@ const SelectTrigger = styled(XStack, {
   backgroundColor: '$background',
   alignItems: 'center',
   justifyContent: 'space-between',
-  cursor: 'pointer',
   width: '100%',
 
   hoverStyle: {
@@ -61,7 +51,6 @@ const SelectTrigger = styled(XStack, {
       true: {
         opacity: 0.6,
         backgroundColor: '$gray100',
-        cursor: 'not-allowed',
       },
     },
     error: {
@@ -83,7 +72,7 @@ const Dropdown = styled(YStack, {
   top: '100%',
   left: 0,
   right: 0,
-  zIndex: '$dropdown',
+  zIndex: 50,
   backgroundColor: '$background',
   borderWidth: 1,
   borderColor: '$border',
@@ -98,7 +87,6 @@ const OptionItem = styled(XStack, {
   name: 'SelectOption',
   paddingHorizontal: '$sm',
   paddingVertical: '$sm',
-  cursor: 'pointer',
   alignItems: 'center',
   justifyContent: 'space-between',
 
@@ -120,20 +108,7 @@ const OptionItem = styled(XStack, {
   } as const,
 })
 
-const SearchInput = styled('input', {
-  name: 'SelectSearchInput',
-  width: '100%',
-  borderWidth: 0,
-  outlineStyle: 'none',
-  fontSize: 14,
-  padding: 8,
-  backgroundColor: 'transparent',
-  color: '$textPrimary',
-  fontFamily: '$body',
-})
-
-/** A dropdown select component with search, multi-select, and clearable support. */
-export const Select = forwardRef<HTMLDivElement, SelectProps>(
+export const Select = forwardRef<any, SelectProps>(
   (
     {
       options,
@@ -146,7 +121,6 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
       value,
       size = 'md',
       error = false,
-      style,
       ...rest
     },
     ref
@@ -154,9 +128,9 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
     const [isOpen, setIsOpen] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
     const [focusedIndex, setFocusedIndex] = useState(-1)
-    const containerRef = useRef<HTMLDivElement>(null)
-    const searchInputRef = useRef<HTMLInputElement>(null)
-    const listRef = useRef<HTMLDivElement>(null)
+    const containerRef = useRef<any>(null)
+    const searchInputRef = useRef<any>(null)
+    const listRef = useRef<any>(null)
 
     const sizeStyles = getSizeStyles(size)
 
@@ -205,72 +179,22 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
     )
 
     const handleClear = useCallback(
-      (e: React.MouseEvent) => {
-        e.stopPropagation()
+      () => {
         onChange?.(isMulti ? [] : '')
       },
       [onChange, isMulti]
     )
 
-    const handleKeyDown = useCallback(
-      (e: React.KeyboardEvent) => {
-        if (!isOpen) {
-          if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
-            e.preventDefault()
-            setIsOpen(true)
-          }
-          return
-        }
-
-        switch (e.key) {
-          case 'ArrowDown':
-            e.preventDefault()
-            setFocusedIndex((prev) =>
-              prev < filteredOptions.length - 1 ? prev + 1 : 0
-            )
-            break
-          case 'ArrowUp':
-            e.preventDefault()
-            setFocusedIndex((prev) =>
-              prev > 0 ? prev - 1 : filteredOptions.length - 1
-            )
-            break
-          case 'Enter':
-            e.preventDefault()
-            if (focusedIndex >= 0 && focusedIndex < filteredOptions.length) {
-              handleSelect(filteredOptions[focusedIndex].value)
-            }
-            break
-          case 'Escape':
-            e.preventDefault()
-            setIsOpen(false)
-            break
-        }
-      },
-      [isOpen, filteredOptions, focusedIndex, handleSelect]
-    )
-
     useEffect(() => {
-      if (focusedIndex >= 0 && listRef.current) {
-        const items = listRef.current.querySelectorAll('[data-option-index]')
-        items[focusedIndex]?.scrollIntoView({ block: 'nearest' })
-      }
-    }, [focusedIndex])
-
-    useEffect(() => {
-      if (isOpen && isSearchable) {
-        setTimeout(() => searchInputRef.current?.focus(), 0)
-      }
-    }, [isOpen, isSearchable])
-
-    useEffect(() => {
-      const handleClickOutside = (e: MouseEvent) => {
-        if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      const handleClickOutside = (e: any) => {
+        if (containerRef.current && !containerRef.current.contains(e.target)) {
           setIsOpen(false)
         }
       }
-      document.addEventListener('mousedown', handleClickOutside)
-      return () => document.removeEventListener('mousedown', handleClickOutside)
+      if (typeof document !== 'undefined') {
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+      }
     }, [])
 
     return (
@@ -287,7 +211,6 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
           error={error}
           open={isOpen}
           onPress={handleToggle}
-          onKeyDown={handleKeyDown}
           height={sizeStyles.height}
           paddingHorizontal={sizeStyles.paddingHorizontal}
         >
@@ -299,12 +222,11 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
           >
             {selectedLabels || placeholder}
           </Text>
-          <XStack space="$xs" alignItems="center">
+          <XStack gap="$xs" alignItems="center">
             {isClearable && value && (Array.isArray(value) ? value.length > 0 : value !== '') && (
               <Text
                 role="button"
                 aria-label="Clear selection"
-                cursor="pointer"
                 color="$textSecondary"
                 fontSize={14}
                 onPress={handleClear}
@@ -319,24 +241,26 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
         </SelectTrigger>
 
         {isOpen && (
-          <Dropdown ref={listRef} role="listbox" aria-multiselectable={isMulti}>
+          <Dropdown ref={listRef} role={'listbox' as any} aria-multiselectable={isMulti}>
             {isSearchable && (
               <XStack borderBottomWidth={1} borderBottomColor="$border" padding="$xs">
-                <SearchInput
-                  ref={searchInputRef}
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value)
-                    setFocusedIndex(-1)
-                  }}
-                  placeholder="Search..."
-                  aria-label="Search options"
-                />
+                <XStack
+                  flex={1}
+                  padding="$sm"
+                  backgroundColor="transparent"
+                >
+                  <Text
+                    fontSize={14}
+                    color="$textSecondary"
+                    onPress={() => {}}
+                  >
+                    Search...
+                  </Text>
+                </XStack>
               </XStack>
             )}
             {filteredOptions.length === 0 ? (
-              <OptionItem disabled>
+              <OptionItem>
                 <Text color="$textTertiary">No options found</Text>
               </OptionItem>
             ) : (
@@ -349,11 +273,9 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
                     key={option.value}
                     role="option"
                     aria-selected={isSelected}
-                    data-option-index={index}
                     selected={isSelected}
                     active={focusedIndex === index}
                     onPress={() => handleSelect(option.value)}
-                    onMouseEnter={() => setFocusedIndex(index)}
                   >
                     <Text fontSize={sizeStyles.fontSize}>{option.label}</Text>
                     {isSelected && <Text color="$primary500">✓</Text>}

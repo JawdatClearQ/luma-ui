@@ -1,22 +1,15 @@
-import { styled, XStack, Text, type StackProps } from 'tamagui'
-import { forwardRef, useCallback, useEffect } from 'react'
-import { Platform } from 'react-native'
-import { useAnimationState } from 'tamagui'
+"use client";
 
-export interface CheckboxProps extends StackProps {
-  /** Whether the checkbox is checked */
+import { styled, XStack, Text, type XStackProps } from 'tamagui'
+import { forwardRef, useCallback, useState, useEffect } from 'react'
+
+export interface CheckboxProps extends Omit<XStackProps, 'onChange'> {
   isChecked?: boolean
-  /** Change handler */
   onChange?: (checked: boolean) => void
-  /** Whether the checkbox is in an indeterminate state */
   isIndeterminate?: boolean
-  /** Whether the checkbox is disabled */
   isDisabled?: boolean
-  /** Checkbox size */
   size?: 'sm' | 'md' | 'lg'
-  /** Color scheme for the checkbox */
   colorScheme?: string
-  /** Label text for the checkbox */
   label?: string
 }
 
@@ -38,7 +31,6 @@ const CheckboxBox = styled(XStack, {
   borderWidth: 2,
   borderColor: '$border',
   backgroundColor: '$background',
-  cursor: 'pointer',
   flexShrink: 0,
 
   variants: {
@@ -57,7 +49,6 @@ const CheckboxBox = styled(XStack, {
     disabled: {
       true: {
         opacity: 0.5,
-        cursor: 'not-allowed',
       },
     },
     error: {
@@ -76,8 +67,7 @@ const CheckMark = styled(Text, {
   userSelect: 'none',
 })
 
-/** An animated checkbox component with indeterminate state support. */
-export const Checkbox = forwardRef<HTMLDivElement, CheckboxProps>(
+export const Checkbox = forwardRef<any, CheckboxProps>(
   (
     {
       isChecked = false,
@@ -87,30 +77,11 @@ export const Checkbox = forwardRef<HTMLDivElement, CheckboxProps>(
       size = 'md',
       colorScheme,
       label,
-      style,
       ...rest
     },
     ref
   ) => {
     const boxSize = getBoxSize(size)
-    const animationState = useAnimationState({
-      checked: {
-        opacity: 1,
-        scale: 1,
-      },
-      unchecked: {
-        opacity: 0,
-        scale: 0,
-      },
-    })
-
-    useEffect(() => {
-      if (isChecked || isIndeterminate) {
-        animationState.current = 'checked'
-      } else {
-        animationState.current = 'unchecked'
-      }
-    }, [isChecked, isIndeterminate, animationState])
 
     const handlePress = useCallback(() => {
       if (!isDisabled) {
@@ -118,35 +89,23 @@ export const Checkbox = forwardRef<HTMLDivElement, CheckboxProps>(
       }
     }, [isDisabled, isChecked, onChange])
 
-    const handleKeyDown = useCallback(
-      (e: React.KeyboardEvent) => {
-        if (e.key === ' ' || e.key === 'Enter') {
-          e.preventDefault()
-          handlePress()
-        }
-      },
-      [handlePress]
-    )
-
     return (
       <XStack
         ref={ref}
         alignItems="center"
-        space="$sm"
+        gap="$sm"
         role="checkbox"
         aria-checked={isIndeterminate ? 'mixed' : isChecked}
         aria-disabled={isDisabled}
         tabIndex={isDisabled ? -1 : 0}
-        cursor={isDisabled ? 'not-allowed' : 'pointer'}
+        opacity={isDisabled ? 0.5 : 1}
         onPress={handlePress}
-        onKeyDown={handleKeyDown}
         {...rest}
       >
         <CheckboxBox
           checked={isChecked && !isIndeterminate}
           indeterminate={isIndeterminate}
           disabled={isDisabled}
-          animation="fast"
           width={boxSize.width}
           height={boxSize.height}
           borderRadius={boxSize.borderRadius as any}

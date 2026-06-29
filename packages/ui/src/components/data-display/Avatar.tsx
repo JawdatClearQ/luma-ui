@@ -1,4 +1,6 @@
-import { styled, YStack, XStack, Text, Image as TamaguiImage, Circle, type StackProps } from 'tamagui'
+"use client";
+
+import { styled, YStack, XStack, Text, Image as TamaguiImage, Circle, type XStackProps } from 'tamagui'
 import { forwardRef, useState, useMemo } from 'react'
 
 type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
@@ -20,7 +22,7 @@ const statusColorMap: Record<StatusType, string> = {
   busy: '#ef4444',
 }
 
-export interface AvatarProps extends StackProps {
+export interface AvatarProps extends XStackProps {
   src?: string
   alt: string
   name?: string
@@ -54,10 +56,10 @@ const StatusDot = styled(Circle, {
 function getInitials(name: string): string {
   return name
     .split(' ')
-    .flatMap((n) => n[0] || [])
+    .filter((n) => n.length > 0)
     .slice(0, 2)
+    .map((n) => n[0].toUpperCase())
     .join('')
-    .toUpperCase()
 }
 
 export const Avatar = forwardRef<any, AvatarProps>(
@@ -100,7 +102,6 @@ export const Avatar = forwardRef<any, AvatarProps>(
             fontWeight="600"
             color="$gray700"
             fontSize={dimension * 0.4}
-            textTransform="uppercase"
           >
             {initials || '?'}
           </Text>

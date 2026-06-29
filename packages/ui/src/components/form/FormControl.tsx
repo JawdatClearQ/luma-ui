@@ -1,29 +1,19 @@
-import { styled, YStack, type StackProps } from 'tamagui'
-import { forwardRef, useId } from 'react'
-import { Platform } from 'react-native'
-import { FormLabel } from './FormLabel'
-import { FormErrorMessage } from './FormErrorMessage'
-import { FormHelperText } from './FormHelperText'
+"use client";
 
-export interface FormControlProps extends StackProps {
-  /** Whether the field is in an invalid state */
+import { YStack, Text, type YStackProps } from 'tamagui'
+import { forwardRef, useId } from 'react'
+
+export interface FormControlProps extends YStackProps {
   isInvalid?: boolean
-  /** Whether the field is required */
   isRequired?: boolean
-  /** Whether the field is disabled */
   isDisabled?: boolean
-  /** Label text for the field */
   label?: string
-  /** Error message to display */
   errorMessage?: string
-  /** Helper text to display */
   helperText?: string
-  /** The form field content */
   children?: React.ReactNode
 }
 
-/** A form field wrapper that provides label, error message, and helper text. */
-export const FormControl = forwardRef<HTMLDivElement, FormControlProps>(
+export const FormControl = forwardRef<any, FormControlProps>(
   (
     {
       isInvalid = false,
@@ -33,26 +23,16 @@ export const FormControl = forwardRef<HTMLDivElement, FormControlProps>(
       errorMessage,
       helperText,
       children,
-      style,
       ...rest
     },
     ref
   ) => {
     const fieldId = useId()
 
-    const renderChildren = () => {
-      if (!children) return null
-      if (typeof children === 'object' && 'type' in (children as any)) {
-        const child = children as React.ReactElement
-        return child
-      }
-      return children
-    }
-
     return (
       <YStack
         ref={ref}
-        space="$xs"
+        gap="$xs"
         role="group"
         aria-invalid={isInvalid}
         aria-required={isRequired}
@@ -60,16 +40,27 @@ export const FormControl = forwardRef<HTMLDivElement, FormControlProps>(
         {...rest}
       >
         {label && (
-          <FormLabel htmlFor={fieldId} isRequired={isRequired}>
-            {label}
-          </FormLabel>
+          <YStack flexDirection="row" alignItems="center" gap={4}>
+            <Text fontSize={14} fontWeight="500" color="$textPrimary">
+              {label}
+            </Text>
+            {isRequired && (
+              <Text fontSize={14} fontWeight="500" color="$error" marginLeft={2}>
+                *
+              </Text>
+            )}
+          </YStack>
         )}
         {children}
         {isInvalid && errorMessage && (
-          <FormErrorMessage>{errorMessage}</FormErrorMessage>
+          <Text fontSize={12} color="$error" marginTop={2}>
+            {errorMessage}
+          </Text>
         )}
         {!isInvalid && helperText && (
-          <FormHelperText>{helperText}</FormHelperText>
+          <Text fontSize={12} color="$textSecondary" marginTop={2}>
+            {helperText}
+          </Text>
         )}
       </YStack>
     )

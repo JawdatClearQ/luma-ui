@@ -1,3 +1,5 @@
+"use client";
+
 import { YStack, styled, type YStackProps } from 'tamagui'
 import { forwardRef, type ReactNode } from 'react'
 

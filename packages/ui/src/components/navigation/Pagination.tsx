@@ -1,11 +1,12 @@
-import { styled, XStack, Text, Button, type StackProps } from 'tamagui'
+"use client";
+
+import { styled, XStack, Text, Button, type XStackProps } from 'tamagui'
 import { forwardRef, useMemo } from 'react'
-import { range } from '../../utils'
 
 type PageSize = 'sm' | 'md' | 'lg'
 type PageVariant = 'outline' | 'solid' | 'ghost'
 
-export interface PaginationProps extends StackProps {
+export interface PaginationProps extends Omit<XStackProps, 'onChange'> {
   totalPages: number
   currentPage: number
   onChange: (page: number) => void
@@ -15,7 +16,7 @@ export interface PaginationProps extends StackProps {
   variant?: PageVariant
 }
 
-const sizeMap = {
+const sizeMap: Record<string, { size: number; fontSize: number; gap: number }> = {
   sm: { size: 28, fontSize: 12, gap: 2 },
   md: { size: 36, fontSize: 14, gap: 4 },
   lg: { size: 44, fontSize: 16, gap: 6 },
@@ -27,21 +28,14 @@ function getPageNumbers(
   siblings: number,
   boundaries: number
 ): (number | 'ellipsis')[] {
-  const totalNumbers = siblings * 2 + boundaries * 2 + 5
-  if (totalNumbers >= total) return range(1, total)
-
   const pages: (number | 'ellipsis')[] = []
-  const leftBoundary = boundaries
-  const rightBoundary = total - boundaries + 1
-  const leftRange = Math.max(current - siblings, boundaries + 2)
-  const rightRange = Math.min(current + siblings, total - boundaries - 1)
-
-  for (let i = 1; i <= boundaries; i++) pages.push(i)
-  if (leftRange > boundaries + 2) pages.push('ellipsis')
-  for (let i = leftRange; i <= rightRange; i++) pages.push(i)
-  if (rightRange < total - boundaries - 1) pages.push('ellipsis')
-  for (let i = total - boundaries + 1; i <= total; i++) pages.push(i)
-
+  for (let i = 1; i <= boundaries && i <= total; i++) pages.push(i)
+  const leftStart = Math.max(current - siblings, boundaries + 2)
+  const rightEnd = Math.min(current + siblings, total - boundaries - 1)
+  if (leftStart > boundaries + 2) pages.push('ellipsis')
+  for (let i = leftStart; i <= rightEnd; i++) pages.push(i)
+  if (rightEnd < total - boundaries - 1) pages.push('ellipsis')
+  for (let i = Math.max(total - boundaries + 1, 1); i <= total; i++) pages.push(i)
   return pages
 }
 
@@ -50,7 +44,6 @@ const PageButton = styled(Button, {
   borderRadius: '$md',
   justifyContent: 'center',
   alignItems: 'center',
-  cursor: 'pointer',
   padding: 0,
   variants: {
     variant: {
@@ -82,7 +75,6 @@ const PageButton = styled(Button, {
     disabled: {
       true: {
         opacity: 0.4,
-        cursor: 'not-allowed',
       },
     },
   } as const,
@@ -93,12 +85,11 @@ const NavButton = styled(Button, {
   borderRadius: '$md',
   justifyContent: 'center',
   alignItems: 'center',
-  cursor: 'pointer',
   padding: 0,
   backgroundColor: 'transparent',
   color: '$textPrimary',
   hoverStyle: { backgroundColor: '$gray100' },
-  disabledStyle: { opacity: 0.3, cursor: 'not-allowed' },
+  disabledStyle: { opacity: 0.3 },
 })
 
 export const Pagination = forwardRef<any, PaginationProps>(

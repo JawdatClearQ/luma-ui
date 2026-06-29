@@ -1,3 +1,5 @@
+"use client";
+
 import { styled, YStack, XStack, Text, Button, type YStackProps, type XStackProps } from 'tamagui'
 import { forwardRef, type ReactNode, useEffect, useCallback } from 'react'
 import { CloseButton } from '../button/CloseButton'

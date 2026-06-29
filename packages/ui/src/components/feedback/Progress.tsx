@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef } from 'react'
 import { styled, YStack, XStack, Text, Circle } from 'tamagui'
 import type { YStackProps } from 'tamagui'

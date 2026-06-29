@@ -1,19 +1,14 @@
-import { styled, XStack, Text, type StackProps } from 'tamagui'
-import { forwardRef, useCallback } from 'react'
-import { Platform } from 'react-native'
+"use client";
 
-export interface SwitchProps extends StackProps {
-  /** Whether the switch is on */
+import { styled, XStack, Text, type XStackProps } from 'tamagui'
+import { forwardRef, useCallback } from 'react'
+
+export interface SwitchProps extends Omit<XStackProps, 'onChange'> {
   isChecked?: boolean
-  /** Change handler */
   onChange?: (checked: boolean) => void
-  /** Whether the switch is disabled */
   isDisabled?: boolean
-  /** Switch size */
   size?: 'sm' | 'md' | 'lg'
-  /** Color scheme for the switch when active */
   colorScheme?: string
-  /** Label text for the switch */
   label?: string
 }
 
@@ -32,10 +27,8 @@ const Track = styled(XStack, {
   name: 'SwitchTrack',
   borderRadius: 9999,
   backgroundColor: '$gray300',
-  cursor: 'pointer',
   alignItems: 'center',
   position: 'relative',
-  transition: 'background-color 0.2s ease',
 
   variants: {
     checked: {
@@ -46,7 +39,6 @@ const Track = styled(XStack, {
     disabled: {
       true: {
         opacity: 0.5,
-        cursor: 'not-allowed',
       },
     },
   } as const,
@@ -58,19 +50,9 @@ const Thumb = styled(XStack, {
   backgroundColor: 'white',
   position: 'absolute',
   elevation: 2,
-  transition: 'transform 0.2s ease',
-
-  variants: {
-    checked: {
-      true: {
-        transform: [{ translateX: 0 }],
-      },
-    },
-  } as const,
 })
 
-/** A toggle switch component with smooth animation and label support. */
-export const Switch = forwardRef<HTMLDivElement, SwitchProps>(
+export const Switch = forwardRef<any, SwitchProps>(
   (
     {
       isChecked = false,
@@ -79,7 +61,6 @@ export const Switch = forwardRef<HTMLDivElement, SwitchProps>(
       size = 'md',
       colorScheme,
       label,
-      style,
       ...rest
     },
     ref
@@ -95,28 +76,17 @@ export const Switch = forwardRef<HTMLDivElement, SwitchProps>(
       }
     }, [isDisabled, isChecked, onChange])
 
-    const handleKeyDown = useCallback(
-      (e: React.KeyboardEvent) => {
-        if (e.key === ' ' || e.key === 'Enter') {
-          e.preventDefault()
-          handlePress()
-        }
-      },
-      [handlePress]
-    )
-
     return (
       <XStack
         ref={ref}
         alignItems="center"
-        space="$sm"
+        gap="$sm"
         role="switch"
         aria-checked={isChecked}
         aria-disabled={isDisabled}
         tabIndex={isDisabled ? -1 : 0}
-        cursor={isDisabled ? 'not-allowed' : 'pointer'}
+        opacity={isDisabled ? 0.5 : 1}
         onPress={handlePress}
-        onKeyDown={handleKeyDown}
         {...rest}
       >
         <Track
@@ -127,7 +97,6 @@ export const Switch = forwardRef<HTMLDivElement, SwitchProps>(
           onPress={handlePress}
         >
           <Thumb
-            checked={isChecked}
             width={switchSize.thumbSize}
             height={switchSize.thumbSize}
             left={thumbTranslateX}

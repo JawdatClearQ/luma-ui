@@ -1,3 +1,5 @@
+"use client";
+
 import { styled, Button as TButton, type ButtonProps as TButtonProps, Spinner, Text, XStack } from 'tamagui'
 import { forwardRef, type ReactNode } from 'react'
 

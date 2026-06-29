@@ -1,3 +1,5 @@
+"use client";
+
 import { styled, Text as TamaguiText, YStack, type TextProps, type YStackProps } from 'tamagui'
 import { forwardRef, type ReactNode } from 'react'
 
@@ -10,20 +12,19 @@ export interface CodeProps extends TextProps {
 const InlineCode = styled(TamaguiText, {
   name: 'InlineCode',
   fontFamily: 'monospace',
-  backgroundColor: '$gray100',
-  color: '$textPrimary',
-  borderRadius: '$sm',
-  paddingHorizontal: '$xs',
+  backgroundColor: '$gray50',
+  color: '$gray800',
+  borderRadius: 4,
+  paddingHorizontal: 4,
   paddingVertical: 1,
-  fontSize: 'inherit',
+  fontSize: 14,
 })
 
 const BlockCode = styled(YStack, {
   name: 'BlockCode',
-  backgroundColor: '$gray100',
-  borderRadius: '$md',
-  padding: '$md',
-  overflow: 'auto' as any,
+  backgroundColor: '$gray50',
+  borderRadius: 8,
+  padding: 16,
 })
 
 const CodeText = styled(TamaguiText, {
@@ -31,7 +32,7 @@ const CodeText = styled(TamaguiText, {
   fontFamily: 'monospace',
   fontSize: 14,
   lineHeight: 20,
-  color: '$textPrimary',
+  color: '$gray800',
 })
 
 export const Code = forwardRef<any, CodeProps>(

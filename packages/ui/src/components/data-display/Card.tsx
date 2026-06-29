@@ -1,3 +1,5 @@
+"use client";
+
 import { styled, YStack, Text, type YStackProps } from 'tamagui'
 import { forwardRef, createContext, useContext } from 'react'
 
@@ -69,7 +71,7 @@ const CardHeader = forwardRef<any, CardSubProps>(({ children, ...props }, ref) =
   )
 })
 CardHeader.displayName = 'Card.Header'
-Card.Header = CardHeader
+;(Card as any).Header = CardHeader
 
 const CardBody = forwardRef<any, CardSubProps>(({ children, ...props }, ref) => {
   return (
@@ -79,7 +81,7 @@ const CardBody = forwardRef<any, CardSubProps>(({ children, ...props }, ref) => 
   )
 })
 CardBody.displayName = 'Card.Body'
-Card.Body = CardBody
+;(Card as any).Body = CardBody
 
 const CardFooter = forwardRef<any, CardSubProps>(({ children, ...props }, ref) => {
   const { size } = useContext(CardContext)
@@ -91,4 +93,4 @@ const CardFooter = forwardRef<any, CardSubProps>(({ children, ...props }, ref) =
   )
 })
 CardFooter.displayName = 'Card.Footer'
-Card.Footer = CardFooter
+;(Card as any).Footer = CardFooter

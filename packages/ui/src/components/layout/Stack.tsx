@@ -1,3 +1,5 @@
+"use client";
+
 import { XStack, YStack, type XStackProps } from 'tamagui'
 import { forwardRef, type ReactNode, Children } from 'react'
 

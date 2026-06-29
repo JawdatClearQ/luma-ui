@@ -2,15 +2,8 @@
 
 import React, { forwardRef } from 'react';
 import { Text, styled } from 'tamagui';
-
-export interface LinkProps {
-  children: React.ReactNode;
-  href?: string;
-  onPress?: () => void;
-  isExternal?: boolean;
-  variant?: 'inline' | 'standalone';
-  color?: string;
-}
+import { Linking } from 'react-native';
+import type { LinkProps } from './Link';
 
 const StyledText = styled(Text, {
   name: 'LumaLink',
@@ -24,18 +17,13 @@ const StyledText = styled(Text, {
 });
 
 export const Link = forwardRef<any, LinkProps>(
-  ({ children, href, onPress, isExternal, variant = 'inline', color }, ref) => {
+  ({ children, href, onPress, isExternal, variant = 'inline' }, ref) => {
     const handlePress = () => {
       if (onPress) onPress();
+      else if (href) Linking.openURL(href);
     };
     return (
-      <StyledText
-        ref={ref}
-        variant={variant}
-        onPress={handlePress}
-        color={color}
-        accessibilityRole="link"
-      >
+      <StyledText ref={ref} variant={variant} onPress={handlePress} accessibilityRole="link">
         {children}{isExternal && ' ↗'}
       </StyledText>
     );

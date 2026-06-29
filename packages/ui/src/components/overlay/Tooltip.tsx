@@ -1,3 +1,5 @@
+"use client";
+
 import { Tooltip as TTooltip, styled, Text, type YStackProps } from 'tamagui'
 import { forwardRef, type ReactNode } from 'react'
 
@@ -14,14 +16,12 @@ export interface TooltipProps extends YStackProps {
 const TooltipContent = styled(TTooltip.Content, {
   name: 'TooltipContent',
   backgroundColor: '$gray900',
-  color: 'white',
   borderRadius: '$sm',
   paddingHorizontal: '$sm',
   paddingVertical: '$xs',
-  fontSize: 12,
-  zIndex: '$tooltip',
-  enterStyle: { opacity: 0, scale: 0.9 },
-  exitStyle: { opacity: 0, scale: 0.9 },
+  zIndex: 800,
+  enterStyle: { opacity: 0, scale: 0.9 } as any,
+  exitStyle: { opacity: 0, scale: 0.9 } as any,
 })
 
 const TooltipArrow = styled(TTooltip.Arrow, {

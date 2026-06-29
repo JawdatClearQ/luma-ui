@@ -1,26 +1,20 @@
-import { styled, XStack, YStack, Text, type StackProps } from 'tamagui'
+"use client";
+
+import { styled, XStack, YStack, Text, type XStackProps } from 'tamagui'
 import { forwardRef, useCallback } from 'react'
-import { Platform } from 'react-native'
 
 export interface RadioOption {
   label: string
   value: string
 }
 
-export interface RadioProps extends StackProps {
-  /** Array of radio options */
+export interface RadioProps extends Omit<XStackProps, 'onChange' | 'direction'> {
   options: RadioOption[]
-  /** Name attribute for the radio group */
   name: string
-  /** Currently selected value */
   value?: string
-  /** Change handler */
   onChange?: (value: string) => void
-  /** Whether the radio group is disabled */
   isDisabled?: boolean
-  /** Layout direction */
   direction?: 'vertical' | 'horizontal'
-  /** Radio size */
   size?: 'sm' | 'md' | 'lg'
 }
 
@@ -43,7 +37,6 @@ const RadioOuter = styled(XStack, {
   borderColor: '$border',
   borderRadius: 9999,
   backgroundColor: '$background',
-  cursor: 'pointer',
   flexShrink: 0,
 
   variants: {
@@ -55,7 +48,6 @@ const RadioOuter = styled(XStack, {
     disabled: {
       true: {
         opacity: 0.5,
-        cursor: 'not-allowed',
       },
     },
     error: {
@@ -80,8 +72,7 @@ const RadioInner = styled(XStack, {
   } as const,
 })
 
-/** A radio button group component with vertical and horizontal layouts. */
-export const Radio = forwardRef<HTMLDivElement, RadioProps>(
+export const Radio = forwardRef<any, RadioProps>(
   (
     {
       options,
@@ -91,7 +82,6 @@ export const Radio = forwardRef<HTMLDivElement, RadioProps>(
       isDisabled = false,
       direction = 'vertical',
       size = 'md',
-      style,
       ...rest
     },
     ref
@@ -107,28 +97,6 @@ export const Radio = forwardRef<HTMLDivElement, RadioProps>(
       [isDisabled, onChange]
     )
 
-    const handleKeyDown = useCallback(
-      (e: React.KeyboardEvent, optionValue: string) => {
-        if (e.key === ' ' || e.key === 'Enter') {
-          e.preventDefault()
-          handlePress(optionValue)
-        }
-        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-          e.preventDefault()
-          const currentIndex = options.findIndex((o) => o.value === optionValue)
-          const nextIndex = (currentIndex + 1) % options.length
-          onChange?.(options[nextIndex].value)
-        }
-        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-          e.preventDefault()
-          const currentIndex = options.findIndex((o) => o.value === optionValue)
-          const prevIndex = (currentIndex - 1 + options.length) % options.length
-          onChange?.(options[prevIndex].value)
-        }
-      },
-      [handlePress, options, onChange]
-    )
-
     const Container = direction === 'horizontal' ? XStack : YStack
 
     return (
@@ -136,7 +104,7 @@ export const Radio = forwardRef<HTMLDivElement, RadioProps>(
         ref={ref}
         role="radiogroup"
         aria-label={name}
-        space="$md"
+        gap="$md"
         {...rest}
       >
         {options.map((option) => {
@@ -145,15 +113,14 @@ export const Radio = forwardRef<HTMLDivElement, RadioProps>(
             <XStack
               key={option.value}
               alignItems="center"
-              space="$sm"
+              gap="$sm"
               role="radio"
               aria-checked={isSelected}
               aria-disabled={isDisabled}
               aria-label={option.label}
               tabIndex={isDisabled ? -1 : 0}
-              cursor={isDisabled ? 'not-allowed' : 'pointer'}
+              opacity={isDisabled ? 0.5 : 1}
               onPress={() => handlePress(option.value)}
-              onKeyDown={(e) => handleKeyDown(e, option.value)}
             >
               <RadioOuter
                 selected={isSelected}
@@ -172,7 +139,6 @@ export const Radio = forwardRef<HTMLDivElement, RadioProps>(
               <Text
                 userSelect="none"
                 color="$textPrimary"
-                opacity={isDisabled ? 0.5 : 1}
                 fontSize={radioSize.fontSize}
               >
                 {option.label}

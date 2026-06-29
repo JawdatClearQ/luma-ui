@@ -4,25 +4,20 @@
   "description": "A beautiful, accessible, cross-platform component library for React and React Native. Light up your UI.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
-  "types": "src/index.ts",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./src/index.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
-    },
-    "./theme": {
-      "import": "./dist/theme.esm.js",
-      "require": "./dist/theme.js"
     }
   },
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --external react,react-dom,react-native,tamagui,@tamagui/core",
-    "dev": "tsup src/index.ts --format esm,cjs --watch --external react,react-dom,react-native,tamagui,@tamagui/core",
+    "build": "tsup src/index.ts --format esm,cjs --dts --external react,react-dom,react-native,tamagui,@tamagui/core",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch --external react,react-dom,react-native,tamagui,@tamagui/core",
     "lint": "eslint src --ext .ts,.tsx",
     "test": "vitest run",
     "clean": "rm -rf dist"
@@ -38,10 +33,10 @@
     "luma"
   ],
   "peerDependencies": {
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "react-native": "^0.86.0",
-    "tamagui": "^2.3.3"
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "react-native": ">=0.72.0",
+    "tamagui": ">=1.90.0"
   },
   "peerDependenciesMeta": {
     "react-dom": {

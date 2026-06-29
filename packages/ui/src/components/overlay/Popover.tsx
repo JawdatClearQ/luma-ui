@@ -1,3 +1,5 @@
+"use client";
+
 import { Popover as TPopover, styled, YStack, type YStackProps, type PopoverProps as TPopoverProps } from 'tamagui'
 import { forwardRef, type ReactNode, useState } from 'react'
 
